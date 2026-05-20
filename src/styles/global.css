@@ -371,3 +371,85 @@ th { color: var(--color-text-muted); font-size: .85rem; }
   .reader-topbar-inner { flex-direction: column; align-items: flex-start; padding: .8rem 0; }
   .chapter-item { flex-direction: column; }
 }
+
+.auth-status {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.auth-card h1 { font-size: clamp(2rem, 5vw, 3.8rem); }
+.auth-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin: .25rem 0 0;
+  color: var(--color-text-muted);
+}
+.auth-links a { color: var(--color-primary); font-weight: 750; }
+.notice {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: .85rem 1rem;
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  margin: 1rem 0;
+}
+.notice.success {
+  border-color: color-mix(in srgb, #2f855a, var(--color-border) 55%);
+  background: color-mix(in srgb, #2f855a, var(--color-surface) 88%);
+}
+.notice.error {
+  border-color: color-mix(in srgb, var(--color-danger), var(--color-border) 45%);
+  background: color-mix(in srgb, var(--color-danger), var(--color-surface) 90%);
+}
+.notice.info {
+  border-color: color-mix(in srgb, var(--color-accent), var(--color-border) 45%);
+  background: color-mix(in srgb, var(--color-accent), var(--color-surface) 90%);
+}
+button:disabled,
+.btn[aria-disabled='true'] {
+  opacity: .65;
+  cursor: progress;
+  transform: none;
+}
+.account-panel {
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.profile-grid div {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  background: var(--color-surface-muted);
+  min-width: 0;
+}
+.profile-grid strong,
+.profile-grid span {
+  display: block;
+}
+.profile-grid strong {
+  color: var(--color-text-muted);
+  font-size: .85rem;
+  margin-bottom: .25rem;
+}
+.profile-grid span {
+  overflow-wrap: anywhere;
+  font-weight: 750;
+}
+.admin-guard {
+  padding: clamp(1.2rem, 4vw, 2rem);
+  max-width: 820px;
+}
+.admin-content.hidden + * { display: none; }
+@media (max-width: 620px) {
+  .auth-status { width: 100%; }
+  .auth-status .btn { flex: 1; min-width: max-content; }
+}

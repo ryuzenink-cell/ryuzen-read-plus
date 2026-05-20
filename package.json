@@ -8,12 +8,17 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "pages:dev": "wrangler pages dev dist",
+    "db:migrate:remote": "wrangler d1 migrations apply ryuzen-read-plus-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply ryuzen-read-plus-db --local",
+    "db:tables:remote": "wrangler d1 execute ryuzen-read-plus-db --remote --command \"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;\""
   },
   "dependencies": {
     "astro": "^6.3.6"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.93.0"
   }
 }

@@ -5,7 +5,7 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "ryuzen-read-plus-db"
-database_id = "COLE_AQUI_O_DATABASE_ID"
+database_id = "0d74644e-a096-40f3-8247-997920a599c4"
 
 # R2 será conectado depois, quando formos subir capas, banners e páginas de mangá.
 # [[r2_buckets]]

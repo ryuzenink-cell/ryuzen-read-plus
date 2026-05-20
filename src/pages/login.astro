@@ -3,9 +3,88 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Entrar" description="Entre na sua conta Ryuzen Read Plus.">
   <section class="page-section">
-    <div class="container"><div class="surface form-card">
-      <span class="eyebrow">Conta</span><h1>Entrar</h1><p class="muted">Tela preparada para autenticação futura via Pages Functions + D1.</p>
-      <form class="form-grid"><div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" /></div><div class="field"><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" /></div><button class="btn primary" type="button">Entrar quando a API estiver ativa</button><a href="/recuperar-senha/">Esqueci minha senha</a></form>
-    </div></div>
+    <div class="container">
+      <div class="surface form-card auth-card">
+        <span class="eyebrow">Conta</span>
+        <h1>Entrar</h1>
+        <p class="muted">Acesse sua biblioteca, progresso de leitura e recursos editoriais internos.</p>
+
+        <div class="notice hidden" data-auth-message role="status"></div>
+
+        <form class="form-grid" data-login-form>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com" />
+          </div>
+          <div class="field">
+            <label for="password">Senha</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required minlength="8" />
+          </div>
+          <button class="btn primary" type="submit" data-submit>Entrar</button>
+          <p class="auth-links">
+            <a href="/recuperar-senha/">Esqueci minha senha</a>
+            <span>·</span>
+            <a href="/cadastro/">Criar conta</a>
+          </p>
+        </form>
+      </div>
+    </div>
   </section>
+  <script is:inline>
+    (() => {
+      const form = document.querySelector('[data-login-form]');
+      const message = document.querySelector('[data-auth-message]');
+      const button = document.querySelector('[data-submit]');
+      if (!form || !message || !button) return;
+
+      const show = (text, type = 'info') => {
+        message.textContent = text;
+        message.className = `notice ${type}`;
+      };
+
+      const redirectTarget = () => {
+        const next = new URLSearchParams(window.location.search).get('next');
+        return next && next.startsWith('/') && !next.startsWith('//') ? next : '/biblioteca/';
+      };
+
+      fetch('/api/auth/me', { credentials: 'include' })
+        .then((response) => response.ok ? response.json() : null)
+        .then((data) => {
+          if (data && data.authenticated) show('Você já está logado. Redirecionando...', 'success');
+          if (data && data.authenticated) window.setTimeout(() => window.location.href = redirectTarget(), 500);
+        })
+        .catch(() => null);
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        button.textContent = 'Entrando...';
+        show('Verificando credenciais...', 'info');
+
+        const payload = Object.fromEntries(new FormData(form).entries());
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+
+          if (!response.ok || !data.ok) {
+            show(data.message || 'Não foi possível entrar.', 'error');
+            return;
+          }
+
+          show('Login realizado. Redirecionando...', 'success');
+          window.location.href = redirectTarget();
+        } catch {
+          show('Falha de conexão com a API de login.', 'error');
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Entrar';
+        }
+      });
+    })();
+  </script>
 </BaseLayout>

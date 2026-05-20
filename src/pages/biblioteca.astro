@@ -1,13 +1,82 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import EmptyState from '../components/EmptyState.astro';
 import WorkGrid from '../components/WorkGrid.astro';
 import { freeWorks } from '../data/works';
 ---
 <BaseLayout title="Minha biblioteca" description="Salve obras e continue lendo de onde parou no Ryuzen Read Plus.">
-  <section class="page-section"><div class="container">
-    <span class="eyebrow">Conta</span><h1>Minha biblioteca</h1><p class="lead">Estado simulado do MVP. Quando login e D1 entrarem, esta página exibirá progresso real, favoritos e histórico.</p>
-    <div class="surface empty-state"><h2>Entre na sua conta para salvar obras e continuar lendo de onde parou.</h2><p class="muted">Enquanto isso, você pode explorar os títulos gratuitos.</p><div class="actions"><a class="btn primary" href="/login/">Entrar</a><a class="btn soft" href="/explorar/">Explorar catálogo</a></div></div>
-    <section class="page-section"><h2>Sugestões para começar</h2><WorkGrid works={freeWorks} compact /></section>
-  </div></section>
+  <section class="page-section">
+    <div class="container">
+      <span class="eyebrow">Conta</span>
+      <h1>Minha biblioteca</h1>
+      <p class="lead">Seu espaço para favoritos, progresso de leitura e histórico. Agora a página consulta a sessão real via D1.</p>
+
+      <div class="surface empty-state" data-library-state>
+        <h2>Carregando sua biblioteca...</h2>
+        <p class="muted">Verificando se você está logado.</p>
+      </div>
+
+      <section class="page-section">
+        <h2>Sugestões para começar</h2>
+        <WorkGrid works={freeWorks} compact />
+      </section>
+    </div>
+  </section>
+  <script is:inline>
+    (() => {
+      const state = document.querySelector('[data-library-state]');
+      if (!state) return;
+
+      const escapeHtml = (value) => String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+      const renderGuest = () => {
+        state.innerHTML = `
+          <h2>Entre na sua conta para salvar obras e continuar lendo de onde parou.</h2>
+          <p class="muted">O backend de autenticação já está conectado ao D1. Faça login ou crie uma conta para testar.</p>
+          <div class="actions"><a class="btn primary" href="/login/?next=/biblioteca/">Entrar</a><a class="btn soft" href="/cadastro/">Criar conta</a></div>
+        `;
+      };
+
+      fetch('/api/library', { credentials: 'include' })
+        .then(async (response) => ({ response, data: await response.json().catch(() => null) }))
+        .then(({ response, data }) => {
+          if (response.status === 401) {
+            renderGuest();
+            return;
+          }
+
+          if (!response.ok || !data || !data.ok) {
+            state.innerHTML = `<h2>Não foi possível carregar sua biblioteca.</h2><p class="muted">${escapeHtml(data && data.message ? data.message : 'Tente novamente em alguns instantes.')}</p>`;
+            return;
+          }
+
+          if (!data.items || data.items.length === 0) {
+            state.innerHTML = `
+              <h2>Sua biblioteca ainda está vazia.</h2>
+              <p class="muted">Olá, ${escapeHtml(data.user && data.user.name ? data.user.name : 'leitor')}! Quando você salvar obras, elas aparecerão aqui.</p>
+              <div class="actions"><a class="btn primary" href="/explorar/">Explorar catálogo</a><a class="btn soft" href="/gratuitos/">Ver gratuitos</a></div>
+            `;
+            return;
+          }
+
+          const items = data.items.map((item) => `
+            <article class="chapter-item">
+              <div>
+                <strong>${escapeHtml(item.title)}</strong>
+                <small>${escapeHtml(item.type)} · ${escapeHtml(item.status)}</small>
+              </div>
+              <a class="btn soft" href="/obra/${escapeHtml(item.slug)}/">Continuar</a>
+            </article>
+          `).join('');
+
+          state.classList.remove('empty-state');
+          state.innerHTML = `<h2>Obras salvas</h2><div class="chapter-list">${items}</div>`;
+        })
+        .catch(renderGuest);
+    })();
+  </script>
 </BaseLayout>

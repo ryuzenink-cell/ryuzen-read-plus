@@ -17,18 +17,79 @@ const links = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | Ryuzen Read Plus</title>
     <link rel="icon" href="/favicon.ico" />
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('rrp-theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+      })();
+    </script>
   </head>
   <body>
-    <div class="admin-shell">
+    <div class="admin-shell" data-admin-shell>
       <aside class="admin-sidebar">
         <a class="brand" href="/admin/"><img src="/icons/favicon-32x32.png" alt="" /> <span>RRP<small>Admin</small></span></a>
         <nav aria-label="Painel editorial">
           {links.map(([href, label]) => <a href={href}>{label}</a>)}
         </nav>
       </aside>
-      <main class="admin-main">
-        <slot />
+      <main class="admin-main is-checking" data-admin-main>
+        <div class="surface admin-guard" data-admin-guard>
+          <span class="eyebrow">Segurança</span>
+          <h1>Verificando acesso...</h1>
+          <p class="lead">A área editorial exige sessão ativa de admin ou editor.</p>
+        </div>
+        <div class="admin-content hidden" data-admin-content>
+          <slot />
+        </div>
       </main>
     </div>
+    <script is:inline>
+      (() => {
+        const guard = document.querySelector('[data-admin-guard]');
+        const content = document.querySelector('[data-admin-content]');
+        const main = document.querySelector('[data-admin-main]');
+        if (!guard || !content || !main) return;
+
+        const escapeHtml = (value) => String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+
+        fetch('/api/auth/me', { credentials: 'include' })
+          .then((response) => response.ok ? response.json() : null)
+          .then((data) => {
+            if (!data || !data.authenticated) {
+              const next = encodeURIComponent(window.location.pathname);
+              guard.innerHTML = `
+                <span class="eyebrow">Login necessário</span>
+                <h1>Entre para continuar</h1>
+                <p class="lead">Você precisa estar logado para acessar o painel editorial.</p>
+                <div class="actions"><a class="btn primary" href="/login/?next=${next}">Entrar</a><a class="btn soft" href="/">Voltar ao site</a></div>
+              `;
+              return;
+            }
+
+            if (!['admin', 'editor'].includes(data.user.role)) {
+              guard.innerHTML = `
+                <span class="eyebrow">Acesso restrito</span>
+                <h1>Sem permissão editorial</h1>
+                <p class="lead">A conta ${escapeHtml(data.user.email)} existe, mas não possui perfil de admin ou editor.</p>
+                <div class="actions"><a class="btn primary" href="/biblioteca/">Minha biblioteca</a><a class="btn soft" href="/">Voltar ao site</a></div>
+              `;
+              return;
+            }
+
+            guard.classList.add('hidden');
+            content.classList.remove('hidden');
+            main.classList.remove('is-checking');
+          })
+          .catch(() => {
+            guard.innerHTML = '<span class="eyebrow">Erro</span><h1>Não foi possível verificar acesso</h1><p class="lead">Confirme se a API e o binding DB estão ativos.</p>';
+          });
+      })();
+    </script>
   </body>
 </html>

@@ -1,0 +1,47 @@
+<div class="auth-status" data-auth-status>
+  <a class="btn ghost" href="/login/">Entrar</a>
+  <a class="btn soft" href="/cadastro/">Criar conta</a>
+</div>
+<script is:inline>
+  (() => {
+    const root = document.querySelector('[data-auth-status]');
+    if (!root) return;
+
+    const escapeHtml = (value) => String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+    const renderGuest = () => {
+      root.innerHTML = '<a class="btn ghost" href="/login/">Entrar</a><a class="btn soft" href="/cadastro/">Criar conta</a>';
+    };
+
+    const renderUser = (user) => {
+      const canEdit = user && ['admin', 'editor'].includes(user.role);
+      root.innerHTML = `
+        <a class="btn ghost" href="/biblioteca/">Biblioteca</a>
+        ${canEdit ? '<a class="btn soft" href="/admin/">Admin</a>' : ''}
+        <a class="btn soft" href="/conta/">${escapeHtml(user.name || 'Conta')}</a>
+        <button class="btn ghost" type="button" data-auth-logout>Sair</button>
+      `;
+    };
+
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (data && data.authenticated && data.user) renderUser(data.user);
+        else renderGuest();
+      })
+      .catch(renderGuest);
+
+    root.addEventListener('click', async (event) => {
+      const button = event.target.closest('[data-auth-logout]');
+      if (!button) return;
+      button.disabled = true;
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => null);
+      window.location.href = '/';
+    });
+  })();
+</script>

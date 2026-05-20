@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import AuthStatus from './AuthStatus.astro';
 import { SITE } from '../lib/site';
 const path = Astro.url.pathname;
 const navItems = [
@@ -23,8 +24,7 @@ const navItems = [
       ))}
     </nav>
     <div class="header-actions">
-      <a class="btn ghost" href="/login/">Entrar</a>
-      <a class="btn soft" href="/cadastro/">Criar conta</a>
+      <AuthStatus />
       <ThemeToggle />
     </div>
   </div>

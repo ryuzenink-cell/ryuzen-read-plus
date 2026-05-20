@@ -2,8 +2,75 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Recuperar senha" description="Recupere o acesso à sua conta Ryuzen Read Plus.">
-  <section class="page-section"><div class="container"><div class="surface form-card">
-    <span class="eyebrow">Conta</span><h1>Recuperar senha</h1><p class="muted">Fluxo preparado para token seguro por email em etapa futura.</p>
-    <form class="form-grid"><div class="field"><label for="email">Email cadastrado</label><input id="email" type="email" autocomplete="email" /></div><button class="btn primary" type="button">Enviar instruções quando a API estiver ativa</button></form>
-  </div></div></section>
+  <section class="page-section">
+    <div class="container">
+      <div class="surface form-card auth-card">
+        <span class="eyebrow">Conta</span>
+        <h1>Recuperar senha</h1>
+        <p class="muted">Informe seu email. Se a conta existir, criaremos um token de recuperação seguro no D1.</p>
+
+        <div class="notice hidden" data-auth-message role="status"></div>
+        <div class="notice hidden" data-reset-link></div>
+
+        <form class="form-grid" data-recover-form>
+          <div class="field">
+            <label for="email">Email cadastrado</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com" />
+          </div>
+          <button class="btn primary" type="submit" data-submit>Enviar instruções</button>
+          <p class="auth-links"><a href="/login/">Voltar para login</a></p>
+        </form>
+      </div>
+    </div>
+  </section>
+  <script is:inline>
+    (() => {
+      const form = document.querySelector('[data-recover-form]');
+      const message = document.querySelector('[data-auth-message]');
+      const resetLink = document.querySelector('[data-reset-link]');
+      const button = document.querySelector('[data-submit]');
+      if (!form || !message || !button || !resetLink) return;
+
+      const show = (text, type = 'info') => {
+        message.textContent = text;
+        message.className = `notice ${type}`;
+      };
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        button.textContent = 'Enviando...';
+        resetLink.className = 'notice hidden';
+        resetLink.textContent = '';
+        show('Processando solicitação...', 'info');
+
+        const payload = Object.fromEntries(new FormData(form).entries());
+        try {
+          const response = await fetch('/api/auth/forgot-password', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+
+          if (!response.ok || !data.ok) {
+            show(data.message || 'Não foi possível solicitar recuperação.', 'error');
+            return;
+          }
+
+          show(data.message || 'Solicitação recebida.', 'success');
+          if (data.resetUrl) {
+            resetLink.className = 'notice info';
+            resetLink.innerHTML = `Teste interno do MVP: <a href="${data.resetUrl}">abrir link de redefinição</a>`;
+          }
+        } catch {
+          show('Falha de conexão com a API de recuperação.', 'error');
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Enviar instruções';
+        }
+      });
+    })();
+  </script>
 </BaseLayout>

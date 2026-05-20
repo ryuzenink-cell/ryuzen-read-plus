@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Minha conta" description="Gerencie sua conta no Ryuzen Read Plus.">
+  <section class="page-section">
+    <div class="container">
+      <div class="surface account-panel" data-account-panel>
+        <span class="eyebrow">Conta</span>
+        <h1>Minha conta</h1>
+        <p class="lead">Verificando sua sessão...</p>
+      </div>
+    </div>
+  </section>
+  <script is:inline>
+    (() => {
+      const panel = document.querySelector('[data-account-panel]');
+      if (!panel) return;
+
+      const escapeHtml = (value) => String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+      const roleLabel = (role) => ({
+        reader: 'Leitor',
+        author: 'Autor',
+        editor: 'Editor',
+        admin: 'Administrador'
+      })[role] || role;
+
+      fetch('/api/auth/me', { credentials: 'include' })
+        .then((response) => response.ok ? response.json() : null)
+        .then((data) => {
+          if (!data || !data.authenticated) {
+            panel.innerHTML = `
+              <span class="eyebrow">Conta</span>
+              <h1>Minha conta</h1>
+              <p class="lead">Você precisa entrar para acessar esta página.</p>
+              <div class="actions"><a class="btn primary" href="/login/?next=/conta/">Entrar</a><a class="btn soft" href="/cadastro/">Criar conta</a></div>
+            `;
+            return;
+          }
+
+          const user = data.user;
+          panel.innerHTML = `
+            <span class="eyebrow">Conta ativa</span>
+            <h1>Olá, ${escapeHtml(user.name)}</h1>
+            <p class="lead">Sua sessão está conectada ao Cloudflare D1 por cookie seguro httpOnly.</p>
+            <div class="profile-grid">
+              <div><strong>Email</strong><span>${escapeHtml(user.email)}</span></div>
+              <div><strong>Perfil</strong><span>${escapeHtml(roleLabel(user.role))}</span></div>
+              <div><strong>ID</strong><span>${escapeHtml(user.id)}</span></div>
+            </div>
+            <div class="actions">
+              <a class="btn primary" href="/biblioteca/">Minha biblioteca</a>
+              ${['admin', 'editor'].includes(user.role) ? '<a class="btn soft" href="/admin/">Painel editorial</a>' : ''}
+              <button class="btn ghost" type="button" data-logout>Sair</button>
+            </div>
+          `;
+        })
+        .catch(() => {
+          panel.innerHTML = '<span class="eyebrow">Erro</span><h1>Minha conta</h1><p class="lead">Não foi possível consultar a API de sessão.</p>';
+        });
+
+      panel.addEventListener('click', async (event) => {
+        const button = event.target.closest('[data-logout]');
+        if (!button) return;
+        button.disabled = true;
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => null);
+        window.location.href = '/';
+      });
+    })();
+  </script>
+</BaseLayout>

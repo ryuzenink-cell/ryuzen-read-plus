@@ -2,6 +2,63 @@
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 ---
 <AdminLayout title="Nova obra">
-  <span class="eyebrow">Cadastro futuro</span><h1>Nova obra</h1><p class="muted">Formulário protótipo para mapear campos que serão persistidos no D1.</p>
-  <form class="surface form-card form-grid"><div class="field"><label for="title">Título</label><input id="title" /></div><div class="field"><label for="slug">Slug</label><input id="slug" /></div><div class="field"><label for="description">Descrição</label><textarea id="description"></textarea></div><button class="btn primary" type="button">Salvar quando API estiver ativa</button></form>
+  <span class="eyebrow">Catálogo D1</span>
+  <h1>Nova obra</h1>
+  <p class="muted">Este formulário já envia dados para <code>/api/admin/works</code>. Use-o para testar a escrita no D1 antes de cadastrarmos capas e capítulos reais.</p>
+
+  <div class="notice hidden" data-work-message role="status"></div>
+
+  <form class="surface form-card form-grid" data-new-work-form>
+    <div class="field"><label for="title">Título</label><input id="title" name="title" required minlength="2" /></div>
+    <div class="field"><label for="slug">Slug</label><input id="slug" name="slug" placeholder="gerado automaticamente se ficar vazio" /></div>
+    <div class="field"><label for="type">Tipo</label><select id="type" name="type"><option value="light_novel">Light Novel</option><option value="manga">Mangá</option><option value="webnovel">Webnovel</option></select></div>
+    <div class="field"><label for="status">Status</label><select id="status" name="status"><option value="development">Em desenvolvimento</option><option value="ongoing">Em andamento</option><option value="soon">Em breve</option><option value="completed">Concluída</option><option value="paused">Pausada</option></select></div>
+    <div class="field"><label for="description">Descrição</label><textarea id="description" name="description" required minlength="10"></textarea></div>
+    <button class="btn primary" type="submit" data-submit>Salvar no D1</button>
+  </form>
+
+  <script is:inline>
+    (() => {
+      const form = document.querySelector('[data-new-work-form]');
+      const message = document.querySelector('[data-work-message]');
+      const button = document.querySelector('[data-submit]');
+      if (!form || !message || !button) return;
+
+      const show = (text, type = 'info') => {
+        message.textContent = text;
+        message.className = `notice ${type}`;
+      };
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        button.textContent = 'Salvando...';
+        show('Enviando para o D1...', 'info');
+
+        const payload = Object.fromEntries(new FormData(form).entries());
+        try {
+          const response = await fetch('/api/admin/works', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+
+          if (!response.ok || !data.ok) {
+            show(data.message || 'Não foi possível cadastrar a obra.', 'error');
+            return;
+          }
+
+          show(`Obra criada no D1: ${data.slug}`, 'success');
+          form.reset();
+        } catch {
+          show('Falha ao conectar com a API administrativa.', 'error');
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Salvar no D1';
+        }
+      });
+    })();
+  </script>
 </AdminLayout>

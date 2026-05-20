@@ -2,8 +2,77 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Criar conta" description="Crie sua conta no Ryuzen Read Plus.">
-  <section class="page-section"><div class="container"><div class="surface form-card">
-    <span class="eyebrow">Conta</span><h1>Criar conta</h1><p class="muted">No futuro, sua conta salvará biblioteca, progresso, tema e preferências de leitura.</p>
-    <form class="form-grid"><div class="field"><label for="name">Nome</label><input id="name" autocomplete="name" /></div><div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" /></div><div class="field"><label for="password">Senha</label><input id="password" type="password" autocomplete="new-password" /></div><button class="btn primary" type="button">Criar quando a API estiver ativa</button></form>
-  </div></div></section>
+  <section class="page-section">
+    <div class="container">
+      <div class="surface form-card auth-card">
+        <span class="eyebrow">Conta</span>
+        <h1>Criar conta</h1>
+        <p class="muted">Sua conta já fica preparada para biblioteca, progresso de leitura, preferências e recursos de autor no futuro.</p>
+
+        <div class="notice hidden" data-auth-message role="status"></div>
+
+        <form class="form-grid" data-register-form>
+          <div class="field">
+            <label for="name">Nome</label>
+            <input id="name" name="name" autocomplete="name" required minlength="2" placeholder="Seu nome ou pseudônimo" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com" />
+          </div>
+          <div class="field">
+            <label for="password">Senha</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" required minlength="8" aria-describedby="password-help" />
+            <small id="password-help" class="muted">Use pelo menos 8 caracteres.</small>
+          </div>
+          <button class="btn primary" type="submit" data-submit>Criar conta</button>
+          <p class="auth-links">Já tem conta? <a href="/login/">Entrar</a></p>
+        </form>
+      </div>
+    </div>
+  </section>
+  <script is:inline>
+    (() => {
+      const form = document.querySelector('[data-register-form]');
+      const message = document.querySelector('[data-auth-message]');
+      const button = document.querySelector('[data-submit]');
+      if (!form || !message || !button) return;
+
+      const show = (text, type = 'info') => {
+        message.textContent = text;
+        message.className = `notice ${type}`;
+      };
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        button.textContent = 'Criando...';
+        show('Criando sua conta...', 'info');
+
+        const payload = Object.fromEntries(new FormData(form).entries());
+        try {
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+
+          if (!response.ok || !data.ok) {
+            show(data.message || 'Não foi possível criar a conta.', 'error');
+            return;
+          }
+
+          show('Conta criada. Redirecionando para sua biblioteca...', 'success');
+          window.location.href = '/biblioteca/';
+        } catch {
+          show('Falha de conexão com a API de cadastro.', 'error');
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Criar conta';
+        }
+      });
+    })();
+  </script>
 </BaseLayout>

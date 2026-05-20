@@ -1,0 +1,9 @@
+---
+import WorkCard from './WorkCard.astro';
+import type { Work } from '../data/works';
+interface Props { works: Work[]; compact?: boolean; }
+const { works, compact = false } = Astro.props;
+---
+<div class="work-grid" data-work-grid>
+  {works.map((work) => <WorkCard work={work} compact={compact} />)}
+</div>

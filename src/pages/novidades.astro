@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getRecentChapters } from '../data/chapters';
+import { getWorkBySlug } from '../data/works';
+import { formatDate } from '../lib/site';
+const recent = getRecentChapters(20);
+---
+<BaseLayout title="Novidades" description="Capítulos e obras recentes do Ryuzen Read Plus.">
+  <section class="page-section">
+    <div class="container">
+      <span class="eyebrow">Atualizações</span>
+      <h1>Novidades</h1>
+      <div class="chapter-list">
+        {recent.map((chapter) => {
+          const work = getWorkBySlug(chapter.workSlug);
+          return (
+            <article class="chapter-item">
+              <div>
+                <strong><a href={`/obra/${chapter.workSlug}/${chapter.chapterSlug}/`}>{chapter.title}</a></strong>
+                <small>{work?.title} · {formatDate(chapter.publishedAt)}</small>
+                <p class="muted">{chapter.excerpt}</p>
+              </div>
+              <a class="btn soft" href={`/obra/${chapter.workSlug}/${chapter.chapterSlug}/`}>Ler agora</a>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

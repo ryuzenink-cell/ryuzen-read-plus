@@ -1,0 +1,34 @@
+---
+import '../styles/global.css';
+const { title = 'Painel editorial' } = Astro.props;
+const links = [
+  ['/admin/', 'Visão geral'],
+  ['/admin/obras/', 'Obras'],
+  ['/admin/obras/nova/', 'Nova obra'],
+  ['/admin/capitulos/', 'Capítulos'],
+  ['/admin/destaques/', 'Destaques'],
+  ['/', 'Voltar ao site']
+];
+---
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Ryuzen Read Plus</title>
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <a class="brand" href="/admin/"><img src="/icons/favicon-32x32.png" alt="" /> <span>RRP<small>Admin</small></span></a>
+        <nav aria-label="Painel editorial">
+          {links.map(([href, label]) => <a href={href}>{label}</a>)}
+        </nav>
+      </aside>
+      <main class="admin-main">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

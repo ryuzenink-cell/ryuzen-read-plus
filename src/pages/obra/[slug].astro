@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ChapterList from '../../components/ChapterList.astro';
+import GenrePills from '../../components/GenrePills.astro';
+import { works, getWorkBySlug } from '../../data/works';
+import { getChaptersByWork } from '../../data/chapters';
+import { SITE, typeLabel, statusLabel, absoluteUrl } from '../../lib/site';
+
+export function getStaticPaths() {
+  return works.map((work) => ({ params: { slug: work.slug } }));
+}
+const { slug } = Astro.params;
+const work = getWorkBySlug(slug!);
+if (!work) return Astro.redirect('/explorar/');
+const chapters = getChaptersByWork(work.slug);
+const jsonLd = [{
+  '@context': 'https://schema.org',
+  '@type': work.type === 'manga' ? 'ComicSeries' : 'BookSeries',
+  name: work.title,
+  description: work.description,
+  author: { '@type': 'Organization', name: work.author },
+  genre: work.genres,
+  url: absoluteUrl(`/obra/${work.slug}/`),
+  image: absoluteUrl(work.cover)
+}];
+---
+<BaseLayout title={work.title} description={work.description} image={work.cover} jsonLd={jsonLd}>
+  <section class="page-section"><div class="container">
+    <Breadcrumbs items={[{ href: '/', label: 'Início' }, { href: '/explorar/', label: 'Explorar' }, { label: work.title }]} />
+    <div class="two-column" style="margin-top: 1rem;">
+      <div class="prose">
+        <span class="eyebrow">{typeLabel(work.type)} · {statusLabel(work.status)}</span>
+        <h1>{work.title}</h1>
+        {work.subtitle && <p class="lead">{work.subtitle}</p>}
+        <p>{work.description}</p>
+        <GenrePills genres={work.genres} />
+        <div class="actions"><a class="btn primary" href={chapters[0] ? `/obra/${work.slug}/${chapters[0].chapterSlug}/` : '#capitulos'}>Começar leitura</a><a class="btn soft" href="/biblioteca/">Salvar na biblioteca</a></div>
+        <section id="capitulos" class="page-section"><h2>Capítulos</h2><ChapterList chapters={chapters} workSlug={work.slug} /></section>
+      </div>
+      <aside class="surface info-card">
+        <img src={work.cover} alt={`Capa de ${work.title}`} style="border-radius: var(--radius-md); border: 1px solid var(--color-border);" />
+        <p><strong>Autor:</strong> {work.author}</p>
+        <p><strong>Tipo:</strong> {typeLabel(work.type)}</p>
+        <p><strong>Status:</strong> {statusLabel(work.status)}</p>
+        <p><strong>Modelo:</strong> {work.free ? 'Leitura gratuita no MVP' : 'Disponível em breve / link externo futuro'}</p>
+      </aside>
+    </div>
+  </div></section>
+</BaseLayout>

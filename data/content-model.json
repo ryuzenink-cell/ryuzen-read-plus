@@ -1,0 +1,92 @@
+{
+  "entities": {
+    "users": [
+      "id",
+      "name",
+      "email",
+      "password_hash",
+      "role",
+      "notification_opt_in",
+      "theme_preference",
+      "created_at"
+    ],
+    "author_profiles": [
+      "id",
+      "user_id",
+      "display_name",
+      "bio",
+      "links"
+    ],
+    "works": [
+      "id",
+      "slug",
+      "title",
+      "subtitle",
+      "synopsis",
+      "cover_url",
+      "author_id",
+      "status",
+      "content_type",
+      "maturity_rating",
+      "publication_status",
+      "is_featured",
+      "created_at",
+      "updated_at"
+    ],
+    "chapters": [
+      "id",
+      "work_id",
+      "slug",
+      "title",
+      "number",
+      "body_html",
+      "excerpt",
+      "access_type",
+      "publication_status",
+      "published_at"
+    ],
+    "library_items": [
+      "id",
+      "user_id",
+      "work_id",
+      "status",
+      "created_at"
+    ],
+    "reading_progress": [
+      "id",
+      "user_id",
+      "work_id",
+      "chapter_id",
+      "progress_percent",
+      "last_position",
+      "updated_at"
+    ],
+    "featured_slots": [
+      "id",
+      "work_id",
+      "slot_type",
+      "label",
+      "starts_at",
+      "ends_at",
+      "active"
+    ],
+    "affiliate_links": [
+      "id",
+      "work_id",
+      "label",
+      "provider",
+      "url",
+      "active"
+    ],
+    "events": [
+      "id",
+      "slug",
+      "title",
+      "event_type",
+      "description",
+      "starts_at",
+      "ends_at",
+      "status"
+    ]
+  }
+}

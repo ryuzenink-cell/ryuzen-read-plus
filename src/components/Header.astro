@@ -1,0 +1,31 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import { SITE } from '../lib/site';
+const path = Astro.url.pathname;
+const navItems = [
+  ['/', 'Início'],
+  ['/explorar/', 'Explorar'],
+  ['/gratuitos/', 'Gratuitos'],
+  ['/novidades/', 'Novidades'],
+  ['/rankings/', 'Rankings'],
+  ['/para-autores/', 'Para autores']
+];
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Página inicial da Ryuzen Read Plus">
+      <img src="/icons/favicon-32x32.png" alt="" width="38" height="38" />
+      <span>{SITE.name}<small>Leitura digital autoral</small></span>
+    </a>
+    <nav class="nav" aria-label="Navegação principal">
+      {navItems.map(([href, label]) => (
+        <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>
+      ))}
+    </nav>
+    <div class="header-actions">
+      <a class="btn ghost" href="/login/">Entrar</a>
+      <a class="btn soft" href="/cadastro/">Criar conta</a>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>

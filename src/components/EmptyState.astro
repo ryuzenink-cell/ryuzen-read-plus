@@ -1,0 +1,7 @@
+---
+const { title = 'Nada encontrado', message = 'Tente ajustar os filtros ou voltar mais tarde.' } = Astro.props;
+---
+<div class="surface empty-state" data-empty-state hidden>
+  <h2>{title}</h2>
+  <p class="muted">{message}</p>
+</div>

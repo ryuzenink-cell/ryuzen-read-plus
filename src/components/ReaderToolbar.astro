@@ -1,0 +1,10 @@
+---
+const { workUrl, prevUrl, nextUrl } = Astro.props;
+---
+<div class="reader-actions" aria-label="Controles do leitor">
+  <a class="btn ghost" href={workUrl}>← Obra</a>
+  {prevUrl && <a class="btn ghost" href={prevUrl}>Anterior</a>}
+  <button class="icon-button" type="button" data-reader-size="minus" aria-label="Diminuir fonte">A−</button>
+  <button class="icon-button" type="button" data-reader-size="plus" aria-label="Aumentar fonte">A+</button>
+  {nextUrl && <a class="btn primary" href={nextUrl}>Próximo</a>}
+</div>

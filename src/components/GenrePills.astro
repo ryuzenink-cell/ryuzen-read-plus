@@ -1,0 +1,7 @@
+---
+interface Props { genres: string[]; linked?: boolean; }
+const { genres, linked = true } = Astro.props;
+---
+<div class="genre-pills" aria-label="Gêneros">
+  {genres.map((genre) => linked ? <a class="tag" href={`/explorar/?genero=${encodeURIComponent(genre)}`}>{genre}</a> : <span class="tag">{genre}</span>)}
+</div>

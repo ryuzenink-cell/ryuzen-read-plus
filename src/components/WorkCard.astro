@@ -1,0 +1,23 @@
+---
+import type { Work } from '../data/works';
+import { typeLabel, statusLabel } from '../lib/site';
+interface Props { work: Work; compact?: boolean; }
+const { work, compact = false } = Astro.props;
+---
+<article class="work-card" data-work-card data-type={work.type} data-status={work.status} data-free={String(work.free)} data-genres={work.genres.join(',').toLowerCase()} data-title={work.title.toLowerCase()}>
+  <a class="work-card-cover" href={`/obra/${work.slug}/`} aria-label={`Abrir ${work.title}`}>
+    <img src={work.cover} alt={`Capa de ${work.title}`} loading="lazy" />
+  </a>
+  <div class="work-card-body">
+    <div class="card-meta">
+      <span class="chip primary">{typeLabel(work.type)}</span>
+      {work.free && <span class="chip">Grátis</span>}
+    </div>
+    <h3><a href={`/obra/${work.slug}/`}>{work.title}</a></h3>
+    {!compact && <p class="muted">{work.description.slice(0, 118)}...</p>}
+    <div class="card-meta">
+      <span class="tag">{statusLabel(work.status)}</span>
+      {work.genres.slice(0, 2).map((genre) => <span class="tag">{genre}</span>)}
+    </div>
+  </div>
+</article>

@@ -1,0 +1,8 @@
+---
+const { placeholder = 'Busque por obra, autor, gênero ou tag...' } = Astro.props;
+---
+<form class="search-bar" action="/explorar/" method="get" role="search">
+  <label class="hidden" for="q">Buscar</label>
+  <input id="q" name="q" type="search" placeholder={placeholder} autocomplete="off" />
+  <button class="btn primary" type="submit">Buscar</button>
+</form>

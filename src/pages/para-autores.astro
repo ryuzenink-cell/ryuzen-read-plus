@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuthorCTA from '../components/AuthorCTA.astro';
+import { SITE } from '../lib/site';
+---
+<BaseLayout title="Para autores" description="Conheça a proposta curada do Ryuzen Read Plus para autores de light novels, mangás e webnovels.">
+  <section class="page-section">
+    <div class="container two-column">
+      <div class="prose">
+        <span class="eyebrow">Publicação curada</span>
+        <h1>Uma vitrine editorial para autores que querem validar suas obras.</h1>
+        <p class="lead">O Ryuzen Read Plus não começa como uma autopublicação aberta. A proposta inicial é curadoria, organização e publicação controlada, como uma pequena agência editorial digital.</p>
+        <h2>Como a Ryuzen pode ajudar</h2>
+        <ul>
+          <li>Publicação organizada de capítulos e páginas de obra.</li>
+          <li>Apresentação editorial mais profissional.</li>
+          <li>Destaques temporários na página inicial.</li>
+          <li>Links externos para Hotmart, Kirvano, Amazon KDP ou outras plataformas.</li>
+          <li>Análise editorial gratuita ou comercial, conforme a estratégia.</li>
+          <li>Eventos, votações e concursos com prêmios simbólicos.</li>
+        </ul>
+        <h2>Modelo de monetização preparado</h2>
+        <p>O MVP está preparado para links de afiliado, destaque pago por período, vitrines editoriais e campanhas especiais, sem implementar checkout interno nesta etapa.</p>
+        <div class="actions"><a class="btn primary" href={`mailto:${SITE.email}`}>Enviar proposta</a><a class="btn soft" href="/enviar-obra/">Ver formulário modelo</a></div>
+      </div>
+      <AuthorCTA />
+    </div>
+  </section>
+</BaseLayout>

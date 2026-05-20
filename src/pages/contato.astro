@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/site';
+---
+<BaseLayout title="Contato" description="Entre em contato com a Ryuzen Read Plus.">
+  <section class="page-section">
+    <div class="container">
+      <div class="surface info-card">
+        <span class="eyebrow">Contato</span>
+        <h1>Fale com a Ryuzen</h1>
+        <p class="lead">Para autores, leitores, parceiros e propostas comerciais, use o email abaixo.</p>
+        <p style="font-size: clamp(1.5rem, 5vw, 3rem); font-weight: 900; letter-spacing: -0.05em;"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        <div class="actions"><a class="btn primary" href={`mailto:${SITE.email}`}>Enviar email</a><a class="btn soft" href="/para-autores/">Ver proposta para autores</a></div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

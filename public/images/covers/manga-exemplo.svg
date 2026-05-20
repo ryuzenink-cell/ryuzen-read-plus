@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1024" role="img" aria-labelledby="title desc">
+<title id="title">Mangá Original|Ryuzen</title>
+<desc id="desc">Capa editorial temporária da obra Mangá Original|Ryuzen</desc>
+<rect width="720" height="1024" fill="#f4f8f5"/>
+<rect x="54" y="64" width="612" height="896" rx="42" fill="#fffaf5" stroke="#e4d7ca" stroke-width="4"/>
+<circle cx="590" cy="156" r="46" fill="#5b7466" opacity="0.18"/>
+<circle cx="142" cy="850" r="78" fill="#5b7466" opacity="0.12"/>
+<path d="M118 230h484M118 286h360M118 342h430" stroke="#5b7466" stroke-width="14" stroke-linecap="round" opacity="0.72"/>
+<text x="118" y="500" font-family="Georgia, 'Times New Roman', serif" font-size="48" line-height="1.12" font-weight="700" fill="#2d2520">
+<tspan x="118" dy="0">Mangá Original</tspan><tspan x="118" dy="58">Ryuzen</tspan>
+</text>
+<text x="118" y="790" font-family="Inter, Arial, sans-serif" font-size="28" fill="#6d5f54">Ryuzen Read Plus</text>
+<text x="118" y="832" font-family="Inter, Arial, sans-serif" font-size="22" fill="#927d6e">capa temporária</text>
+</svg>

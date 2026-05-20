@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import ReaderToolbar from '../components/ReaderToolbar.astro';
+import { SITE, absoluteUrl } from '../lib/site';
+const { title, description, workUrl, prevUrl, nextUrl, jsonLd = [] } = Astro.props;
+const fullTitle = `${title} | ${SITE.name}`;
+---
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={absoluteUrl(Astro.url.pathname)} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={absoluteUrl(Astro.url.pathname)} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('rrp-theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+        const size = localStorage.getItem('rrp-reader-font-size');
+        if (size) document.documentElement.style.setProperty('--reader-font-size', `${size}px`);
+      })();
+    </script>
+    {jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+  </head>
+  <body>
+    <header class="reader-topbar">
+      <div class="container reader-topbar-inner">
+        <a class="brand" href="/" aria-label="Ryuzen Read Plus"><img src="/icons/favicon-32x32.png" alt="" /> <span>{SITE.shortName}<small>Modo leitura</small></span></a>
+        <div class="reader-actions">
+          <ThemeToggle />
+          <ReaderToolbar workUrl={workUrl} prevUrl={prevUrl} nextUrl={nextUrl} />
+        </div>
+      </div>
+    </header>
+    <main class="reader-shell">
+      <slot />
+    </main>
+    <script is:inline>
+      const setReaderSize = (next) => {
+        const value = Math.max(16, Math.min(26, next));
+        document.documentElement.style.setProperty('--reader-font-size', `${value}px`);
+        localStorage.setItem('rrp-reader-font-size', String(value));
+      };
+      document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const html = document.documentElement;
+          const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+          html.dataset.theme = next;
+          localStorage.setItem('rrp-theme', next);
+        });
+      });
+      document.querySelectorAll('[data-reader-size]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const current = Number(localStorage.getItem('rrp-reader-font-size') || 19);
+          setReaderSize(current + (button.dataset.readerSize === 'plus' ? 1 : -1));
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { works } from '../../data/works';
+import { typeLabel, statusLabel } from '../../lib/site';
+---
+<AdminLayout title="Gerenciar obras">
+  <div class="section-header"><div><span class="eyebrow">Catálogo</span><h1>Obras</h1></div><a class="btn primary" href="/admin/obras/nova/">Nova obra</a></div>
+  <div class="table-wrap"><table><thead><tr><th>Título</th><th>Tipo</th><th>Status</th><th>Destaque</th></tr></thead><tbody>{works.map((work) => <tr><td>{work.title}</td><td>{typeLabel(work.type)}</td><td>{statusLabel(work.status)}</td><td>{work.featured ? 'Sim' : 'Não'}</td></tr>)}</tbody></table></div>
+</AdminLayout>

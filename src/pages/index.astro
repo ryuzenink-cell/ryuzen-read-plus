@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBar from '../components/SearchBar.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import FeaturedSection from '../components/FeaturedSection.astro';
+import WorkGrid from '../components/WorkGrid.astro';
+import RankingList from '../components/RankingList.astro';
+import GenrePills from '../components/GenrePills.astro';
+import AuthorCTA from '../components/AuthorCTA.astro';
+import { featuredWorks, freeWorks, latestWorks, works } from '../data/works';
+import { getRecentChapters } from '../data/chapters';
+import { genres } from '../data/genres';
+import { SITE, absoluteUrl } from '../lib/site';
+const recentChapters = getRecentChapters(5);
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'Organization', name: 'Ryuzen', url: 'https://ryuzen.ink', email: SITE.email },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url, potentialAction: { '@type': 'SearchAction', target: `${SITE.url}/explorar/?q={search_term_string}`, 'query-input': 'required name=search_term_string' } }
+];
+---
+<BaseLayout title="Light novels, mangás e webnovels autorais" description={SITE.description} jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-card">
+        <span class="eyebrow">MVP editorial da Ryuzen</span>
+        <h1>Leia obras autorais em uma plataforma feita para descoberta.</h1>
+        <p class="lead">O Ryuzen Read Plus reúne light novels, mangás, webnovels e projetos originais em um ambiente limpo, rápido e preparado para SEO.</p>
+        <SearchBar />
+        <div class="actions">
+          <a class="btn primary" href="/explorar/">Explorar catálogo</a>
+          <a class="btn soft" href="/para-autores/">Sou autor</a>
+        </div>
+      </div>
+      <div class="surface info-card">
+        <span class="eyebrow">Comece por aqui</span>
+        <h2>Capítulos recentes</h2>
+        <div class="chapter-list">
+          {recentChapters.map((chapter) => (
+            <a class="chapter-item" href={`/obra/${chapter.workSlug}/${chapter.chapterSlug}/`}>
+              <div>
+                <strong>{chapter.title}</strong>
+                <small>{chapter.excerpt}</small>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      <SectionHeader eyebrow="Curadoria" title="Obras em destaque" description="Seleção editorial para novos leitores conhecerem a proposta da Ryuzen." href="/explorar/" />
+      <FeaturedSection works={featuredWorks} />
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      <SectionHeader title="Novidades da plataforma" description="Obras e atualizações recentes para acompanhar desde o começo." href="/novidades/" />
+      <WorkGrid works={latestWorks} compact />
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container two-column">
+      <div>
+        <SectionHeader title="Gratuitos para começar" description="Capítulos e obras abertas para testar a leitura." href="/gratuitos/" />
+        <WorkGrid works={freeWorks} compact />
+      </div>
+      <div class="surface info-card">
+        <SectionHeader title="Ranking" description="Sinais editoriais e métricas simuladas do MVP." href="/rankings/" />
+        <RankingList />
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      <SectionHeader title="Explore por gênero" description="Uma organização inspirada em plataformas de leitura, mas com foco em obras autorais." />
+      <GenrePills genres={genres} />
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      <AuthorCTA />
+    </div>
+  </section>
+</BaseLayout>

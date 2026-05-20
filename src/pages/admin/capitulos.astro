@@ -1,0 +1,8 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { chapters } from '../../data/chapters';
+---
+<AdminLayout title="Capítulos">
+  <span class="eyebrow">Publicação</span><h1>Capítulos</h1>
+  <div class="table-wrap"><table><thead><tr><th>Nº</th><th>Título</th><th>Obra</th><th>Grátis</th></tr></thead><tbody>{chapters.map((chapter) => <tr><td>{chapter.number}</td><td>{chapter.title}</td><td>{chapter.workSlug}</td><td>{chapter.isFree ? 'Sim' : 'Não'}</td></tr>)}</tbody></table></div>
+</AdminLayout>

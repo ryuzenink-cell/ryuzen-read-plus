@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmptyState from '../components/EmptyState.astro';
+import WorkGrid from '../components/WorkGrid.astro';
+import { freeWorks } from '../data/works';
+---
+<BaseLayout title="Minha biblioteca" description="Salve obras e continue lendo de onde parou no Ryuzen Read Plus.">
+  <section class="page-section"><div class="container">
+    <span class="eyebrow">Conta</span><h1>Minha biblioteca</h1><p class="lead">Estado simulado do MVP. Quando login e D1 entrarem, esta página exibirá progresso real, favoritos e histórico.</p>
+    <div class="surface empty-state"><h2>Entre na sua conta para salvar obras e continuar lendo de onde parou.</h2><p class="muted">Enquanto isso, você pode explorar os títulos gratuitos.</p><div class="actions"><a class="btn primary" href="/login/">Entrar</a><a class="btn soft" href="/explorar/">Explorar catálogo</a></div></div>
+    <section class="page-section"><h2>Sugestões para começar</h2><WorkGrid works={freeWorks} compact /></section>
+  </div></section>
+</BaseLayout>

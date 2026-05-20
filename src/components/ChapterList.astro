@@ -1,0 +1,18 @@
+---
+import type { Chapter } from '../data/chapters';
+import { formatDate } from '../lib/site';
+interface Props { chapters: Chapter[]; workSlug: string; }
+const { chapters, workSlug } = Astro.props;
+---
+<div class="chapter-list">
+  {chapters.map((chapter) => (
+    <article class="chapter-item">
+      <div>
+        <strong><a href={`/obra/${workSlug}/${chapter.chapterSlug}/`}>{chapter.number === 0 ? chapter.title : `Capítulo ${chapter.number} — ${chapter.title}`}</a></strong>
+        <small>{formatDate(chapter.publishedAt)} · {chapter.isFree ? 'Gratuito' : 'Pago'}</small>
+        <p class="muted">{chapter.excerpt}</p>
+      </div>
+      <a class="btn soft" href={`/obra/${workSlug}/${chapter.chapterSlug}/`}>Ler</a>
+    </article>
+  ))}
+</div>

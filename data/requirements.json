@@ -1,0 +1,23 @@
+{
+  "functional": [
+    "Catálogo com home, explorar, rankings, gratuitos e novidades",
+    "Página da obra com metadados, sinopse e capítulos",
+    "Leitor textual com tema e tamanho de fonte",
+    "Login com email e senha",
+    "Biblioteca do usuário e progresso de leitura",
+    "Notificações opt-in",
+    "Painel admin para obras, capítulos e destaques",
+    "Monetização por afiliados e destaques pagos",
+    "Eventos e votações pós-MVP",
+    "SEO com sitemap, canonical e dados estruturados"
+  ],
+  "non_functional": [
+    "Performance mobile",
+    "Acessibilidade WCAG AA como alvo",
+    "Segurança OWASP básica",
+    "LGPD e consentimento",
+    "Escalabilidade em Cloudflare Pages/Workers",
+    "Manutenibilidade com componentes reutilizáveis",
+    "Observabilidade e backups"
+  ]
+}

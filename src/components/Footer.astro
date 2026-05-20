@@ -1,0 +1,31 @@
+---
+import { SITE } from '../lib/site';
+---
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>{SITE.name}</strong>
+      <p class="muted">Plataforma curada para light novels, mangás, webnovels e obras originais da Ryuzen.</p>
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    </div>
+    <div>
+      <strong>Leitura</strong>
+      <a href="/explorar/">Explorar</a>
+      <a href="/gratuitos/">Gratuitos</a>
+      <a href="/novidades/">Novidades</a>
+      <a href="/rankings/">Rankings</a>
+    </div>
+    <div>
+      <strong>Autores</strong>
+      <a href="/para-autores/">Para autores</a>
+      <a href="/enviar-obra/">Enviar obra</a>
+      <a href="/contato/">Contato comercial</a>
+    </div>
+    <div>
+      <strong>Institucional</strong>
+      <a href="/sobre/">Sobre</a>
+      <a href="/termos/">Termos</a>
+      <a href="/privacidade/">Privacidade</a>
+    </div>
+  </div>
+</footer>

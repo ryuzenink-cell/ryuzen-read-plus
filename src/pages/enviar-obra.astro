@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Enviar obra" description="Formulário protótipo para autores interessados em publicar ou divulgar obras no Ryuzen Read Plus.">
+  <section class="page-section">
+    <div class="container">
+      <div class="surface form-card">
+        <span class="eyebrow">Protótipo</span>
+        <h1>Enviar obra para análise</h1>
+        <p class="muted">Este formulário ainda não envia dados. Ele define a estrutura futura do fluxo editorial.</p>
+        <form class="form-grid">
+          <div class="field"><label for="name">Nome do autor</label><input id="name" name="name" placeholder="Seu nome ou pseudônimo" /></div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="voce@email.com" /></div>
+          <div class="field"><label for="title">Título da obra</label><input id="title" name="title" /></div>
+          <div class="field"><label for="type">Tipo</label><select id="type" name="type"><option>Light Novel</option><option>Mangá</option><option>Webnovel</option></select></div>
+          <div class="field"><label for="pitch">Resumo / proposta</label><textarea id="pitch" name="pitch" placeholder="Explique a obra, público e links relevantes."></textarea></div>
+          <button class="btn primary" type="button">Enviar quando o backend estiver ativo</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

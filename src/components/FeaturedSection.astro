@@ -1,0 +1,21 @@
+---
+import type { Work } from '../data/works';
+import { typeLabel } from '../lib/site';
+interface Props { works: Work[]; }
+const { works } = Astro.props;
+---
+<div class="featured-layout">
+  {works.map((work) => (
+    <article class="surface featured-panel">
+      <div class="cover-row">
+        <a href={`/obra/${work.slug}/`}><img src={work.cover} alt={`Capa de ${work.title}`} loading="lazy" /></a>
+        <div>
+          <span class="eyebrow">{typeLabel(work.type)} em destaque</span>
+          <h3><a href={`/obra/${work.slug}/`}>{work.title}</a></h3>
+          <p class="muted">{work.description}</p>
+          <a class="btn primary" href={`/obra/${work.slug}/`}>Começar leitura</a>
+        </div>
+      </div>
+    </article>
+  ))}
+</div>

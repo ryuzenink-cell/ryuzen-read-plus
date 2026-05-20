@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Entrar" description="Entre na sua conta Ryuzen Read Plus.">
+  <section class="page-section">
+    <div class="container"><div class="surface form-card">
+      <span class="eyebrow">Conta</span><h1>Entrar</h1><p class="muted">Tela preparada para autenticação futura via Pages Functions + D1.</p>
+      <form class="form-grid"><div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" /></div><div class="field"><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" /></div><button class="btn primary" type="button">Entrar quando a API estiver ativa</button><a href="/recuperar-senha/">Esqueci minha senha</a></form>
+    </div></div>
+  </section>
+</BaseLayout>

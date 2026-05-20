@@ -1,0 +1,20 @@
+---
+import { rankings } from '../data/rankings';
+import { getWorkBySlug } from '../data/works';
+---
+<div class="ranking-list">
+  {rankings.map((item) => {
+    const work = getWorkBySlug(item.workSlug);
+    if (!work) return null;
+    return (
+      <article class="ranking-item">
+        <span class="rank-number">#{item.position}</span>
+        <div>
+          <strong><a href={`/obra/${work.slug}/`}>{work.title}</a></strong>
+          <small class="muted">{work.genres.join(' • ')}</small>
+        </div>
+        <span class="chip">{item.metric}</span>
+      </article>
+    );
+  })}
+</div>

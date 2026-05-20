@@ -1,0 +1,9 @@
+{
+  "name": "ryuzen-read-plus-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Protótipo estático da organização de páginas do Ryuzen Read Plus.",
+  "scripts": {
+    "serve": "python -m http.server 8080"
+  }
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://read.ryuzen.ink/sitemap.xml

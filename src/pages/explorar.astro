@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBar from '../components/SearchBar.astro';
+import WorkGrid from '../components/WorkGrid.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { works } from '../data/works';
+import { genres } from '../data/genres';
+---
+<BaseLayout title="Explorar obras" description="Explore light novels, mangás e webnovels disponíveis no Ryuzen Read Plus.">
+  <section class="page-section">
+    <div class="container">
+      <span class="eyebrow">Catálogo</span>
+      <h1>Explorar obras</h1>
+      <p class="lead">Filtre por tipo, gênero, status ou disponibilidade. Nesta fase, os filtros são locais e usam o catálogo mockado do MVP.</p>
+      <SearchBar />
+      <div class="surface info-card" style="margin: 1rem 0;">
+        <div class="form-grid" data-filters>
+          <div class="field"><label for="type">Tipo</label><select id="type" data-filter="type"><option value="">Todos</option><option value="light_novel">Light Novel</option><option value="manga">Mangá</option><option value="webnovel">Webnovel</option></select></div>
+          <div class="field"><label for="genre">Gênero</label><select id="genre" data-filter="genre"><option value="">Todos</option>{genres.map((genre) => <option value={genre.toLowerCase()}>{genre}</option>)}</select></div>
+          <div class="field"><label for="status">Status</label><select id="status" data-filter="status"><option value="">Todos</option><option value="ongoing">Em andamento</option><option value="completed">Concluídas</option><option value="soon">Em breve</option><option value="development">Em desenvolvimento</option></select></div>
+          <div class="field"><label for="free">Disponibilidade</label><select id="free" data-filter="free"><option value="">Todas</option><option value="true">Gratuitas</option><option value="false">Comercial/externa</option></select></div>
+        </div>
+      </div>
+      <WorkGrid works={works} />
+      <EmptyState title="Nenhuma obra encontrada" message="Altere os filtros ou volte quando o catálogo crescer." />
+    </div>
+  </section>
+  <script is:inline>
+    const filterInputs = document.querySelectorAll('[data-filter]');
+    const cards = [...document.querySelectorAll('[data-work-card]')];
+    const empty = document.querySelector('[data-empty-state]');
+    function applyFilters() {
+      const values = Object.fromEntries([...filterInputs].map((el) => [el.dataset.filter, el.value]));
+      let visible = 0;
+      cards.forEach((card) => {
+        const matchesType = !values.type || card.dataset.type === values.type;
+        const matchesStatus = !values.status || card.dataset.status === values.status;
+        const matchesFree = !values.free || card.dataset.free === values.free;
+        const matchesGenre = !values.genre || card.dataset.genres.includes(values.genre);
+        const show = matchesType && matchesStatus && matchesFree && matchesGenre;
+        card.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      if (empty) empty.hidden = visible !== 0;
+    }
+    filterInputs.forEach((input) => input.addEventListener('change', applyFilters));
+    applyFilters();
+  </script>
+</BaseLayout>

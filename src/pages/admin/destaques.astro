@@ -1,0 +1,8 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { featuredWorks } from '../../data/works';
+---
+<AdminLayout title="Destaques">
+  <span class="eyebrow">Monetização futura</span><h1>Destaques editoriais</h1><p class="lead">Área preparada para controlar destaques orgânicos e pagos por período.</p>
+  <div class="chapter-list">{featuredWorks.map((work) => <article class="chapter-item"><div><strong>{work.title}</strong><small>Slot editorial inicial · destaque orgânico</small></div><a class="btn soft" href={`/obra/${work.slug}/`}>Ver</a></article>)}</div>
+</AdminLayout>

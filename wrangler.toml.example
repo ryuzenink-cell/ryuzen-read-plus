@@ -1,0 +1,14 @@
+name = "ryuzen-read-plus"
+compatibility_date = "2026-05-20"
+pages_build_output_dir = "dist"
+
+# Cloudflare D1 - crie o banco pelo painel ou wrangler e substitua os placeholders.
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "ryuzen-read-plus-db"
+# database_id = "00000000-0000-0000-0000-000000000000"
+
+# Cloudflare R2 - usado futuramente para capas, banners, avatares e páginas de mangá.
+[[r2_buckets]]
+binding = "RRP_ASSETS"
+bucket_name = "ryuzen-read-plus-assets"

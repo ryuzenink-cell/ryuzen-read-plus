@@ -47,9 +47,12 @@ const imageUrl = image.startsWith('http') ? image : absoluteUrl(image);
     <meta name="twitter:image" content={imageUrl} />
     <script is:inline>
       (() => {
-        const saved = localStorage.getItem('rrp-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+        try {
+          const saved = localStorage.getItem('rrp-theme');
+          document.documentElement.dataset.theme = saved === 'dark' ? 'dark' : 'light';
+        } catch {
+          document.documentElement.dataset.theme = 'light';
+        }
       })();
     </script>
     {jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
@@ -63,11 +66,19 @@ const imageUrl = image.startsWith('http') ? image : absoluteUrl(image);
     <Footer />
     <script is:inline>
       document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+        const updateState = () => {
+          const isDark = document.documentElement.dataset.theme === 'dark';
+          button.setAttribute('aria-pressed', String(isDark));
+          button.setAttribute('aria-label', isDark ? 'Ativar tema claro' : 'Ativar tema escuro');
+        };
+
+        updateState();
         button.addEventListener('click', () => {
           const html = document.documentElement;
           const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
           html.dataset.theme = next;
           localStorage.setItem('rrp-theme', next);
+          updateState();
         });
       });
     </script>

@@ -14,7 +14,7 @@ export async function onRequestPost({ request, env }: any) {
     if (name.length < 2) return json({ ok: false, message: 'Informe seu nome ou pseudônimo.' }, { status: 400 });
     if (!validateEmail(email)) return json({ ok: false, message: 'Informe um email válido.' }, { status: 400 });
     if (title.length < 2) return json({ ok: false, message: 'Informe o título da obra.' }, { status: 400 });
-    if (!['Light Novel', 'Mangá', 'Webnovel', 'light_novel', 'manga', 'webnovel'].includes(type)) return json({ ok: false, message: 'Escolha um tipo de obra válido.' }, { status: 400 });
+    if (!['Light Novel', 'Webnovel', 'light_novel', 'webnovel'].includes(type)) return json({ ok: false, message: 'Escolha um tipo de obra válido.' }, { status: 400 });
     if (pitch.length < 30) return json({ ok: false, message: 'Escreva uma proposta com pelo menos 30 caracteres.' }, { status: 400 });
 
     const id = crypto.randomUUID();

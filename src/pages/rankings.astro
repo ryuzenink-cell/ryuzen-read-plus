@@ -1,14 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import RankingList from '../components/RankingList.astro';
 ---
-<BaseLayout title="Rankings" description="Rankings editoriais e métricas simuladas do catálogo Ryuzen Read Plus.">
+<BaseLayout title="Rankings" description="Ranking editorial de light novels e webnovels da Ryuzen Read Plus.">
   <section class="page-section">
     <div class="container">
       <span class="eyebrow">Descoberta</span>
       <h1>Rankings</h1>
-      <p class="lead">Nesta fase, os rankings são editoriais e simulados. No futuro, eles poderão considerar leituras, favoritos e cliques.</p>
-      <RankingList />
+      <p class="lead">Por enquanto, o ranking é editorial e controlado no painel admin, sem dados falsos ou obras de exemplo.</p>
+      <div data-ranking-list></div>
     </div>
   </section>
+  <script src="/assets/editorial-public.js" defer></script>
 </BaseLayout>

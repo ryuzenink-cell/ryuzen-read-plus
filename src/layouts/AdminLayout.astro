@@ -20,8 +20,7 @@ const links = [
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('rrp-theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = saved === 'dark' ? 'dark' : 'light';
       })();
     </script>
   </head>
@@ -37,7 +36,7 @@ const links = [
         <div class="surface admin-guard" data-admin-guard>
           <span class="eyebrow">Segurança</span>
           <h1>Verificando acesso...</h1>
-          <p class="lead">A área editorial exige sessão ativa de admin ou editor.</p>
+          <p class="lead">A área editorial exige sessão ativa com permissão de admin ou editor.</p>
         </div>
         <div class="admin-content hidden" data-admin-content>
           <slot />
@@ -87,7 +86,7 @@ const links = [
             main.classList.remove('is-checking');
           })
           .catch(() => {
-            guard.innerHTML = '<span class="eyebrow">Erro</span><h1>Não foi possível verificar acesso</h1><p class="lead">Confirme se a API e o binding DB estão ativos.</p>';
+            guard.innerHTML = '<span class="eyebrow">Erro</span><h1>Não foi possível verificar acesso</h1><p class="lead">Confirme sua conexão e tente novamente.</p>';
           });
       })();
     </script>

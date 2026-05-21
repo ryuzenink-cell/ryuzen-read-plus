@@ -7,7 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="surface form-card">
         <span class="eyebrow">Autores</span>
         <h1>Enviar obra para análise</h1>
-        <p class="muted">O formulário já grava sua proposta no Cloudflare D1 para triagem editorial.</p>
+        <p class="muted">O formulário registra sua proposta para triagem editorial.</p>
 
         <div class="notice hidden" data-submission-message role="status"></div>
 
@@ -15,7 +15,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <div class="field"><label for="name">Nome do autor</label><input id="name" name="name" required placeholder="Seu nome ou pseudônimo" /></div>
           <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required placeholder="voce@email.com" /></div>
           <div class="field"><label for="title">Título da obra</label><input id="title" name="title" required /></div>
-          <div class="field"><label for="type">Tipo</label><select id="type" name="type"><option>Light Novel</option><option>Mangá</option><option>Webnovel</option></select></div>
+          <div class="field"><label for="type">Tipo</label><select id="type" name="type"><option>Light Novel</option><option>Webnovel</option></select></div>
           <div class="field"><label for="pitch">Resumo / proposta</label><textarea id="pitch" name="pitch" required minlength="30" placeholder="Explique a obra, público, links relevantes e estágio atual do projeto."></textarea></div>
           <button class="btn primary" type="submit" data-submit>Enviar para análise</button>
         </form>
@@ -38,7 +38,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         event.preventDefault();
         button.disabled = true;
         button.textContent = 'Enviando...';
-        show('Enviando proposta para o D1...', 'info');
+        show('Enviando proposta...', 'info');
 
         const payload = Object.fromEntries(new FormData(form).entries());
         try {
@@ -58,7 +58,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           show(data.message || 'Proposta enviada.', 'success');
           form.reset();
         } catch {
-          show('Falha ao conectar com a API de envio de obras.', 'error');
+          show('Não foi possível enviar a proposta agora.', 'error');
         } finally {
           button.disabled = false;
           button.textContent = 'Enviar para análise';

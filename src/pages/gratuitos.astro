@@ -1,17 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import WorkGrid from '../components/WorkGrid.astro';
-import { freeWorks } from '../data/works';
 ---
-<BaseLayout title="Gratuitos" description="Obras e capítulos gratuitos para começar a ler no Ryuzen Read Plus.">
+<BaseLayout title="Gratuitos" description="Novels e capítulos gratuitos para começar a ler no Ryuzen Read Plus.">
   <section class="page-section">
     <div class="container">
       <span class="eyebrow">Entrada livre</span>
       <h1>Gratuitos para começar</h1>
-      <p class="lead">Uma vitrine simples para reduzir atrito: o leitor chega, abre uma obra e começa a ler sem cadastro obrigatório.</p>
-      <SectionHeader title="Obras abertas" description="Catálogo inicial com leitura gratuita no MVP." />
-      <WorkGrid works={freeWorks} />
+      <p class="lead">Uma vitrine simples para reduzir atrito: o leitor chega, abre uma novel e começa a ler sem cadastro obrigatório.</p>
+      <SectionHeader title="Obras abertas" description="Conteúdo real marcado como gratuito no painel editorial." />
+      <div data-free-list></div>
     </div>
   </section>
+  <script src="/assets/editorial-public.js" defer></script>
 </BaseLayout>

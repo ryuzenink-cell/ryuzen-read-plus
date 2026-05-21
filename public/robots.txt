@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://read.ryuzen.ink/sitemap.xml
+Sitemap: https://readplus.ryuzen.ink/sitemap.xml

@@ -47,7 +47,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           panel.innerHTML = `
             <span class="eyebrow">Conta ativa</span>
             <h1>Olá, ${escapeHtml(user.name)}</h1>
-            <p class="lead">Sua sessão está conectada ao Cloudflare D1 por cookie seguro httpOnly.</p>
+            <p class="lead">Sua sessão está protegida por cookie seguro httpOnly.</p>
             <div class="profile-grid">
               <div><strong>Email</strong><span>${escapeHtml(user.email)}</span></div>
               <div><strong>Perfil</strong><span>${escapeHtml(roleLabel(user.role))}</span></div>

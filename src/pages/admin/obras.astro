@@ -1,75 +1,18 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { works } from '../../data/works';
-import { typeLabel, statusLabel } from '../../lib/site';
 ---
 <AdminLayout title="Gerenciar obras">
-  <div class="section-header">
-    <div>
-      <span class="eyebrow">Catálogo</span>
-      <h1>Obras</h1>
-      <p class="muted">A tabela abaixo tenta carregar obras reais do D1. Se o banco estiver vazio, mostra os dados editoriais estáticos do MVP.</p>
+  <section data-admin-works-list>
+    <div class="section-header">
+      <div><span class="eyebrow">Catálogo editorial</span><h1>Obras</h1><p class="muted">Gerencie apenas light novels e webnovels reais publicadas ou em rascunho.</p></div>
+      <a class="btn primary" href="/admin/obras/nova/">Nova obra</a>
     </div>
-    <a class="btn primary" href="/admin/obras/nova/">Nova obra</a>
-  </div>
-
-  <div class="notice info" data-admin-works-status>Carregando obras do D1...</div>
-
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Título</th><th>Tipo</th><th>Status</th><th>Destaque</th></tr></thead>
-      <tbody data-admin-works-body>
-        {works.map((work) => <tr><td>{work.title}</td><td>{typeLabel(work.type)}</td><td>{statusLabel(work.status)}</td><td>{work.featured ? 'Sim' : 'Não'}</td></tr>)}
-      </tbody>
-    </table>
-  </div>
-
-  <script is:inline>
-    (() => {
-      const status = document.querySelector('[data-admin-works-status]');
-      const body = document.querySelector('[data-admin-works-body]');
-      if (!status || !body) return;
-
-      const escapeHtml = (value) => String(value || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-
-      const typeLabel = (type) => ({ light_novel: 'Light Novel', manga: 'Mangá', webnovel: 'Webnovel' })[type] || type;
-      const statusLabel = (value) => ({ ongoing: 'Em andamento', completed: 'Concluída', development: 'Em desenvolvimento', soon: 'Em breve', paused: 'Pausada' })[value] || value;
-
-      fetch('/api/admin/works', { credentials: 'include' })
-        .then(async (response) => ({ response, data: await response.json().catch(() => null) }))
-        .then(({ response, data }) => {
-          if (!response.ok || !data || !data.ok) {
-            status.className = 'notice error';
-            status.textContent = data && data.message ? data.message : 'Não foi possível carregar obras do D1.';
-            return;
-          }
-
-          if (!data.items || data.items.length === 0) {
-            status.className = 'notice info';
-            status.textContent = 'O D1 ainda não possui obras cadastradas. A tabela está mostrando o catálogo estático do MVP.';
-            return;
-          }
-
-          body.innerHTML = data.items.map((work) => `
-            <tr>
-              <td>${escapeHtml(work.title)}</td>
-              <td>${escapeHtml(typeLabel(work.type))}</td>
-              <td>${escapeHtml(statusLabel(work.status))}</td>
-              <td>${work.is_featured ? 'Sim' : 'Não'}</td>
-            </tr>
-          `).join('');
-          status.className = 'notice success';
-          status.textContent = `${data.items.length} obra(s) carregada(s) do D1.`;
-        })
-        .catch(() => {
-          status.className = 'notice error';
-          status.textContent = 'Falha ao consultar a API administrativa.';
-        });
-    })();
-  </script>
+    <div class="notice hidden" data-works-message></div>
+    <div class="surface info-card admin-filters">
+      <div class="field"><label for="work-q">Busca</label><input id="work-q" data-work-filter="q" placeholder="Título, autor ou slug"></div>
+      <div class="field"><label for="work-status">Publicação</label><select id="work-status" data-work-filter="publication_status"><option value="">Todos</option><option value="draft">Rascunhos</option><option value="scheduled">Agendadas</option><option value="published">Publicadas</option><option value="hidden">Ocultas</option><option value="archived">Arquivadas</option></select></div>
+    </div>
+    <div class="table-wrap" style="margin-top: 1rem;"><table><thead><tr><th>Título</th><th>Autor</th><th>Tipo</th><th>Publicação</th><th>Capítulos</th><th>Destaque</th><th>Atualização</th><th>Ações</th></tr></thead><tbody data-works-body><tr><td colspan="8">Carregando obras...</td></tr></tbody></table></div>
+  </section>
+  <script src="/assets/admin-editorial.js" defer></script>
 </AdminLayout>

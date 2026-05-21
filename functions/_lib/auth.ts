@@ -43,7 +43,7 @@ const TOKEN_BYTES = 32;
 
 export function requireDb(env: Env) {
   if (!env.DB) {
-    throw new Error('Binding D1 ausente. Configure o binding DB no Cloudflare Pages.');
+    throw new Error('Não foi possível acessar os dados do projeto. Verifique a configuração do ambiente.');
   }
   return env.DB;
 }

@@ -1,8 +1,26 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { featuredWorks } from '../../data/works';
 ---
 <AdminLayout title="Destaques">
-  <span class="eyebrow">Monetização futura</span><h1>Destaques editoriais</h1><p class="lead">Área preparada para controlar destaques orgânicos e pagos por período.</p>
-  <div class="chapter-list">{featuredWorks.map((work) => <article class="chapter-item"><div><strong>{work.title}</strong><small>Slot editorial inicial · destaque orgânico</small></div><a class="btn soft" href={`/obra/${work.slug}/`}>Ver</a></article>)}</div>
+  <section data-admin-featured>
+    <div class="section-header">
+      <div><span class="eyebrow">Curadoria</span><h1>Destaques editoriais</h1><p class="lead">Controle quais novels aparecem na home, ranking editorial e recomendações.</p></div>
+    </div>
+    <div class="notice hidden" data-featured-message></div>
+    <form class="surface admin-form-section" data-featured-form>
+      <h2>Novo destaque</h2>
+      <div class="admin-form-grid">
+        <div class="field"><label for="work_id">Obra publicada</label><select id="work_id" name="work_id" required><option value="">Carregando obras...</option></select></div>
+        <div class="field"><label for="slot_key">Seção</label><select id="slot_key" name="slot_key"><option value="home_featured">Obras em destaque</option><option value="hero">Destaque principal</option><option value="ranking_editorial">Ranking editorial</option><option value="recommendations">Recomendações editoriais</option></select></div>
+        <div class="field"><label for="label">Rótulo</label><input id="label" name="label" placeholder="Destaque editorial"></div>
+        <div class="field"><label for="priority">Prioridade</label><input id="priority" name="priority" type="number" value="0"></div>
+        <div class="field"><label for="starts_at">Início</label><input id="starts_at" name="starts_at" type="datetime-local"></div>
+        <div class="field"><label for="ends_at">Fim</label><input id="ends_at" name="ends_at" type="datetime-local"></div>
+        <label class="field"><span>Ativo</span><input name="active" type="checkbox" checked></label>
+      </div>
+      <div class="actions"><button class="btn primary" type="submit">Salvar destaque</button></div>
+    </form>
+    <section style="margin-top:1rem;"><h2>Destaques cadastrados</h2><div class="chapter-list" data-featured-list></div></section>
+  </section>
+  <script src="/assets/admin-editorial.js" defer></script>
 </AdminLayout>

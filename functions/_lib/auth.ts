@@ -38,7 +38,7 @@ const encoder = new TextEncoder();
 const DEFAULT_COOKIE_NAME = 'rrp_session';
 const SESSION_DAYS = 30;
 const HASH_VERSION = 'pbkdf2-sha256-v1';
-const PBKDF2_ITERATIONS = 120_000;
+const PBKDF2_ITERATIONS = 100_000;
 const TOKEN_BYTES = 32;
 
 export function requireDb(env: Env) {

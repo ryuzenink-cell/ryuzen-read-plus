@@ -27,6 +27,18 @@
     return data;
   };
   const dateLabel = (value) => value ? new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium' }).format(new Date(value)) : 'Sempre';
+  const toIsoDateTime = (value) => {
+    if (!value) return '';
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString();
+  };
+  const toLocalDateTimeInput = (value) => {
+    if (!value) return '';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return String(value).slice(0, 16);
+    const local = new Date(parsed.getTime() - parsed.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0, 16);
+  };
   const source = () => form.elements.source_type.value;
   const selectedWork = () => works.find((work) => work.id === workSelect.value);
   const previewUrl = () => source() === 'work' ? selectedWork()?.banner_url : form.elements.image_url.value.trim();
@@ -66,9 +78,11 @@
     editingId = item.id;
     form.elements.source_type.value = item.source_type || 'external';
     form.elements.work_id.value = item.work_id || '';
-    ['image_url', 'mobile_image_url', 'alt_text', 'eyebrow', 'title', 'description', 'cta_label', 'cta_url', 'priority', 'starts_at', 'ends_at'].forEach((field) => {
+    ['image_url', 'mobile_image_url', 'alt_text', 'eyebrow', 'title', 'description', 'cta_label', 'cta_url', 'priority'].forEach((field) => {
       form.elements[field].value = item[field] || '';
     });
+    form.elements.starts_at.value = toLocalDateTimeInput(item.starts_at);
+    form.elements.ends_at.value = toLocalDateTimeInput(item.ends_at);
     form.elements.active.checked = Boolean(item.active);
     $('[data-banner-form-title]').textContent = 'Editar banner';
     cancelButton.classList.remove('hidden');
@@ -85,7 +99,7 @@
     }
     list.innerHTML = items.map((item) => `
       <article class="surface banner-admin-card">
-        <img class="banner-admin-image" src="${esc(item.image_url)}" alt="${esc(item.alt_text || item.title)}" loading="lazy">
+        <img class="banner-admin-image" src="${esc(item.display_image_url || item.image_url)}" alt="${esc(item.alt_text || item.title)}" loading="lazy">
         <div class="banner-admin-body">
           <div class="card-meta"><span class="chip ${item.active ? 'primary' : ''}">${item.active ? 'Ativo' : 'Inativo'}</span><span class="chip">${item.source_type === 'work' ? 'Obra' : 'URL externa'}</span><span class="chip">Prioridade ${esc(item.priority)}</span></div>
           <h3>${esc(item.title)}</h3>
@@ -121,8 +135,8 @@
       cta_url: form.elements.cta_url.value,
       priority: form.elements.priority.value,
       active: form.elements.active.checked,
-      starts_at: form.elements.starts_at.value,
-      ends_at: form.elements.ends_at.value
+      starts_at: toIsoDateTime(form.elements.starts_at.value),
+      ends_at: toIsoDateTime(form.elements.ends_at.value)
     };
   }
 

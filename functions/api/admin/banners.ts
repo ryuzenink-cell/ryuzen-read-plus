@@ -67,7 +67,8 @@ export async function onRequestGet({ request, env }: any) {
     const db = requireDb(env);
     const [{ results: items = [] }, { results: publishedWorks = [] }] = await Promise.all([
       db.prepare(`
-        SELECT home_banners.*, works.title AS work_title, works.slug AS work_slug, works.banner_url AS work_banner_url
+        SELECT home_banners.*, works.title AS work_title, works.slug AS work_slug, works.banner_url AS work_banner_url,
+          CASE WHEN home_banners.source_type = 'work' AND works.banner_url IS NOT NULL AND works.banner_url <> '' THEN works.banner_url ELSE home_banners.image_url END AS display_image_url
         FROM home_banners
         LEFT JOIN works ON works.id = home_banners.work_id
         ORDER BY home_banners.active DESC, home_banners.priority DESC, home_banners.updated_at DESC

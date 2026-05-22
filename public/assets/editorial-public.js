@@ -73,7 +73,7 @@
         ${banners.map((banner, index) => `<article class="carousel-slide ${index === 0 ? 'is-active' : ''}" data-carousel-slide aria-hidden="${index !== 0}">
           <picture>
             ${banner.mobile_image_url ? `<source media="(max-width: 620px)" srcset="${esc(banner.mobile_image_url)}">` : ''}
-            <img src="${esc(banner.image_url)}" alt="${esc(banner.alt_text || banner.title)}" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
+            <img src="${esc(banner.image_url)}" alt="${esc(banner.alt_text || banner.title)}" data-carousel-image data-fallback-url="${esc(banner.work_cover_url || '')}" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
           </picture>
           <div class="carousel-shade"></div>
           <div class="carousel-content">
@@ -85,6 +85,19 @@
         </article>`).join('')}
       </div>
       ${banners.length > 1 ? `<button class="carousel-arrow previous" type="button" data-carousel-prev aria-label="Banner anterior">‹</button><button class="carousel-arrow next" type="button" data-carousel-next aria-label="Próximo banner">›</button><div class="carousel-dots" role="tablist" aria-label="Banners">${banners.map((_, index) => `<button type="button" class="carousel-dot ${index === 0 ? 'is-active' : ''}" data-carousel-dot="${index}" aria-label="Mostrar banner ${index + 1}" aria-selected="${index === 0}"></button>`).join('')}</div>` : ''}`;
+    $$('[data-carousel-image]', root).forEach((image) => {
+      image.addEventListener('error', () => {
+        const slide = image.closest('[data-carousel-slide]');
+        const fallback = image.dataset.fallbackUrl;
+        if (fallback && image.src !== fallback) {
+          slide?.classList.add('uses-cover-fallback');
+          image.src = fallback;
+          return;
+        }
+        slide?.classList.add('has-image-error');
+        image.remove();
+      });
+    });
     if (banners.length < 2) return;
     const slides = $$('[data-carousel-slide]', root);
     const dots = $$('[data-carousel-dot]', root);

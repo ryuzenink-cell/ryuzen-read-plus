@@ -31,8 +31,21 @@
   function setPreview(input, target) {
     const url = input?.value?.trim();
     if (!target) return;
-    if (!url) { target.innerHTML = '<p class="muted">Cole uma URL para visualizar a imagem.</p>'; return; }
-    target.innerHTML = `<img class="${input.name.includes('banner') ? 'banner-preview' : 'image-preview'}" src="${esc(url)}" alt="Preview" onerror="this.replaceWith(Object.assign(document.createElement('p'),{className:'muted',textContent:'Não foi possível carregar esta imagem.'}))">`;
+    const isBanner = input?.name?.includes('banner');
+    if (!url) { target.innerHTML = `<p class="muted">Cole uma URL para visualizar ${isBanner ? 'o banner' : 'a capa'}.</p>`; return; }
+    target.innerHTML = `<img class="${isBanner ? 'banner-preview' : 'image-preview'}" src="${esc(url)}" alt="Preview" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('p'),{className:'muted',textContent:'Não foi possível carregar esta imagem. Verifique se a URL é pública e direta.'}))">`;
+  }
+
+  function syncBannerFields(form) {
+    if (!form) return;
+    const yes = form.querySelector('input[name="show_banner"][value="yes"]');
+    const fields = $('[data-banner-fields]', form);
+    const enabled = Boolean(yes?.checked);
+    fields?.classList.toggle('is-disabled', !enabled);
+    form.banner_url && (form.banner_url.disabled = !enabled);
+    form.banner_alt && (form.banner_alt.disabled = !enabled);
+    form.banner_credit && (form.banner_credit.disabled = !enabled);
+    if (!enabled) setPreview(form.banner_url, $('[data-banner-preview]'));
   }
 
   function markdownPreview(value) {
@@ -67,12 +80,12 @@
       const status = $('[data-work-filter="publication_status"]', root)?.value || '';
       const visible = works.filter((work) => (!q || `${work.title} ${work.author_name} ${work.slug}`.toLowerCase().includes(q)) && (!status || work.publication_status === status));
       if (!visible.length) {
-        body.innerHTML = `<tr><td colspan="8"><div class="empty-state"><h2>Nenhuma obra encontrada.</h2><p class="muted">Cadastre uma obra real pelo botão “Nova obra”.</p></div></td></tr>`;
+        body.innerHTML = `<tr><td colspan="9"><div class="empty-state"><h2>Nenhuma obra encontrada.</h2><p class="muted">Cadastre uma obra real pelo botão “Nova obra”.</p></div></td></tr>`;
         return;
       }
       body.innerHTML = visible.map((work) => `<tr>
         <td><div class="admin-table-title">${work.cover_url ? `<img class="admin-mini-cover" src="${esc(work.cover_url)}" alt="">` : '<span class="admin-mini-cover cover-placeholder">R+</span>'}<div><strong>${esc(work.title)}</strong><small>${esc(work.slug)}</small></div></div></td>
-        <td>${esc(work.author_name || '')}</td><td>${typeLabel(work.type)}</td><td><span class="status-pill ${esc(work.publication_status)}">${statusLabel(work.publication_status)}</span></td><td>${esc(work.chapter_count || 0)}</td><td>${work.is_featured ? 'Sim' : 'Não'}</td><td>${formatDate(work.updated_at)}</td>
+        <td>${esc(work.author_name || '')}</td><td>${typeLabel(work.type)}</td><td><span class="status-pill ${esc(work.publication_status)}">${statusLabel(work.publication_status)}</span></td><td><span class="media-badge ${work.banner_url ? 'has-banner' : 'no-banner'}">${work.banner_url ? 'Com banner' : 'Sem banner'}</span></td><td>${esc(work.chapter_count || 0)}</td><td>${work.is_featured ? 'Sim' : 'Não'}</td><td>${formatDate(work.updated_at)}</td>
         <td><div class="table-actions"><a class="btn soft" href="/admin/obras/nova/?id=${esc(work.id)}">Editar</a>${work.publication_status === 'published' ? `<a class="btn ghost" href="/obra/${esc(work.slug)}/" target="_blank">Ver</a>` : ''}<button class="btn ghost" type="button" data-delete-work="${esc(work.id)}">Excluir</button></div></td>
       </tr>`).join('');
     };
@@ -93,7 +106,7 @@
 
   function workPayload(form, publicationStatus) {
     return {
-      title: value(form, 'title'), subtitle: value(form, 'subtitle'), slug: value(form, 'slug'), author_name: value(form, 'author_name'), type: value(form, 'type'), status: value(form, 'status'), publication_status: publicationStatus || value(form, 'publication_status'), language: value(form, 'language'), age_rating: value(form, 'age_rating'), short_description: value(form, 'short_description'), description: value(form, 'description'), editorial_notes: value(form, 'editorial_notes'), cover_url: value(form, 'cover_url'), cover_alt: value(form, 'cover_alt'), cover_credit: value(form, 'cover_credit'), banner_url: value(form, 'banner_url'), banner_alt: value(form, 'banner_alt'), banner_credit: value(form, 'banner_credit'), genres: value(form, 'genres'), tags: value(form, 'tags'), is_free: checked(form, 'is_free'), is_featured: checked(form, 'is_featured'), featured_priority: value(form, 'featured_priority'), featured_label: value(form, 'featured_label'), featured_starts_at: value(form, 'featured_starts_at'), featured_ends_at: value(form, 'featured_ends_at'), external_url: value(form, 'external_url'), external_label: value(form, 'external_label'), seo_title: value(form, 'seo_title'), seo_description: value(form, 'seo_description'), published_at: value(form, 'published_at'), scheduled_at: value(form, 'scheduled_at')
+      title: value(form, 'title'), subtitle: value(form, 'subtitle'), slug: value(form, 'slug'), author_name: value(form, 'author_name'), type: value(form, 'type'), status: value(form, 'status'), publication_status: publicationStatus || value(form, 'publication_status'), language: value(form, 'language'), age_rating: value(form, 'age_rating'), short_description: value(form, 'short_description'), description: value(form, 'description'), editorial_notes: value(form, 'editorial_notes'), cover_url: value(form, 'cover_url'), cover_alt: value(form, 'cover_alt'), cover_credit: value(form, 'cover_credit'), banner_url: value(form, 'show_banner') === 'yes' ? value(form, 'banner_url') : '', banner_alt: value(form, 'show_banner') === 'yes' ? value(form, 'banner_alt') : '', banner_credit: value(form, 'show_banner') === 'yes' ? value(form, 'banner_credit') : '', genres: value(form, 'genres'), tags: value(form, 'tags'), is_free: checked(form, 'is_free'), is_featured: checked(form, 'is_featured'), featured_priority: value(form, 'featured_priority'), featured_label: value(form, 'featured_label'), featured_starts_at: value(form, 'featured_starts_at'), featured_ends_at: value(form, 'featured_ends_at'), external_url: value(form, 'external_url'), external_label: value(form, 'external_label'), seo_title: value(form, 'seo_title'), seo_description: value(form, 'seo_description'), published_at: value(form, 'published_at'), scheduled_at: value(form, 'scheduled_at')
     };
   }
 
@@ -108,6 +121,8 @@
     const bannerPreview = $('[data-banner-preview]');
     form.cover_url?.addEventListener('input', () => setPreview(form.cover_url, coverPreview));
     form.banner_url?.addEventListener('input', () => setPreview(form.banner_url, bannerPreview));
+    form.querySelectorAll('input[name="show_banner"]').forEach((radio) => radio.addEventListener('change', () => syncBannerFields(form)));
+    syncBannerFields(form);
     form.title?.addEventListener('input', () => { if (!id && !form.slug.value) form.slug.value = slugify(form.title.value); });
     if (id) {
       try {
@@ -117,6 +132,9 @@
         Object.entries({ title: work.title, subtitle: work.subtitle, slug: work.slug, author_name: work.author_name, type: work.type, status: work.status, publication_status: work.publication_status, language: work.language, age_rating: work.age_rating, short_description: work.short_description, description: work.description, editorial_notes: work.editorial_notes, cover_url: work.cover_url, cover_alt: work.cover_alt, cover_credit: work.cover_credit, banner_url: work.banner_url, banner_alt: work.banner_alt, banner_credit: work.banner_credit, genres: (work.genres || []).map((g) => g.name || g).join(', '), tags: (work.tags || []).map((t) => t.name || t).join(', '), featured_priority: work.featured_priority, featured_label: work.featured_label, featured_starts_at: work.featured_starts_at, featured_ends_at: work.featured_ends_at, external_url: work.external_url, external_label: work.external_label, seo_title: work.seo_title, seo_description: work.seo_description, published_at: work.published_at, scheduled_at: work.scheduled_at }).forEach(([key, val]) => { if (form.elements[key]) form.elements[key].value = val || ''; });
         form.is_free.checked = Boolean(work.is_free);
         form.is_featured.checked = Boolean(work.is_featured);
+        const bannerChoice = form.querySelector(`input[name="show_banner"][value="${work.banner_url ? 'yes' : 'no'}"]`);
+        if (bannerChoice) bannerChoice.checked = true;
+        syncBannerFields(form);
         setPreview(form.cover_url, coverPreview); setPreview(form.banner_url, bannerPreview);
         $('[data-public-preview]')?.setAttribute('href', `/obra/${work.slug}/`);
         $('[data-public-preview]')?.removeAttribute('hidden');

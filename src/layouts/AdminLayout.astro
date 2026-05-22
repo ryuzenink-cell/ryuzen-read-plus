@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 const { title = 'Painel editorial' } = Astro.props;
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => href !== '/' && (currentPath === href || currentPath.startsWith(href));
 const links = [
   ['/admin/', 'Visão geral'],
   ['/admin/obras/', 'Obras'],
@@ -29,10 +31,11 @@ const links = [
       <aside class="admin-sidebar">
         <a class="brand" href="/admin/"><img src="/icons/favicon-32x32.png" alt="" /> <span>RRP<small>Admin</small></span></a>
         <nav aria-label="Painel editorial">
-          {links.map(([href, label]) => <a href={href}>{label}</a>)}
+          {links.map(([href, label]) => <a href={href} aria-current={isActive(href) ? 'page' : undefined}>{label}</a>)}
         </nav>
       </aside>
       <main class="admin-main is-checking" data-admin-main>
+        <div class="admin-topbar"><div><span class="eyebrow">Ryuzen ReadPlus</span><strong>Painel editorial de novels</strong></div><button class="theme-toggle" type="button" data-theme-toggle aria-label="Alternar tema"><span class="theme-toggle-icon">☀️</span><span class="theme-toggle-icon">/</span><span class="theme-toggle-icon">🌙</span></button></div>
         <div class="surface admin-guard" data-admin-guard>
           <span class="eyebrow">Segurança</span>
           <h1>Verificando acesso...</h1>
@@ -43,6 +46,17 @@ const links = [
         </div>
       </main>
     </div>
+    <script is:inline>
+      (() => {
+        const btn = document.querySelector('[data-theme-toggle]');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+          document.documentElement.dataset.theme = next;
+          localStorage.setItem('rrp-theme', next);
+        });
+      })();
+    </script>
     <script is:inline>
       (() => {
         const guard = document.querySelector('[data-admin-guard]');

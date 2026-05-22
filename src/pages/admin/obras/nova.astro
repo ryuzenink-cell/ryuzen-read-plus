@@ -32,11 +32,20 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       <div class="field"><label for="editorial_notes">Observações internas</label><textarea id="editorial_notes" name="editorial_notes" placeholder="Notas que não aparecem no site público"></textarea></div>
     </section>
 
-    <section class="surface admin-form-section">
-      <h2>Imagens externas</h2><p class="hint">Não há upload nesta fase. Cole uma URL pública da capa/banner. Capas verticais de light novel são preservadas sem deformar.</p>
-      <div class="admin-form-grid">
-        <div><div class="field"><label for="cover_url">URL da capa</label><input id="cover_url" name="cover_url" type="url" placeholder="https://..."></div><div class="field"><label for="cover_alt">Texto alternativo da capa</label><input id="cover_alt" name="cover_alt"></div><div class="field"><label for="cover_credit">Crédito/fonte da capa</label><input id="cover_credit" name="cover_credit"></div><div class="preview-card" data-cover-preview><p class="muted">Cole uma URL para visualizar a capa.</p></div></div>
-        <div><div class="field"><label for="banner_url">URL do banner</label><input id="banner_url" name="banner_url" type="url" placeholder="https://..."></div><div class="field"><label for="banner_alt">Texto alternativo do banner</label><input id="banner_alt" name="banner_alt"></div><div class="field"><label for="banner_credit">Crédito/fonte do banner</label><input id="banner_credit" name="banner_credit"></div><div class="preview-card" data-banner-preview><p class="muted">Cole uma URL para visualizar o banner.</p></div></div>
+    <section class="surface admin-form-section media-section">
+      <div class="form-section-heading"><div><h2>Imagens externas</h2><p class="hint">Não há upload nesta fase. Cole URLs públicas. A capa vertical é preservada sem deformar.</p></div><span class="section-chip">URL externa</span></div>
+      <div class="admin-form-grid media-grid">
+        <div class="media-field-card"><div class="field"><label for="cover_url">URL da capa</label><input id="cover_url" name="cover_url" type="url" placeholder="https://..."><small>Recomendado: imagem vertical em WEBP/PNG/JPG, hospedada em Supabase, R2, CDN ou GitHub raw.</small></div><div class="field"><label for="cover_alt">Texto alternativo da capa</label><input id="cover_alt" name="cover_alt"></div><div class="field"><label for="cover_credit">Crédito/fonte da capa</label><input id="cover_credit" name="cover_credit"></div><div class="preview-card cover-preview-card" data-cover-preview><p class="muted">Cole uma URL para visualizar a capa.</p></div></div>
+        <div class="media-field-card">
+          <fieldset class="banner-toggle-group" data-banner-toggle-group>
+            <legend>Exibir banner na página da obra?</legend>
+            <label><input type="radio" name="show_banner" value="yes"> <span>Sim, exibir banner</span></label>
+            <label><input type="radio" name="show_banner" value="no" checked> <span>Não exibir banner</span></label>
+          </fieldset>
+          <div data-banner-fields>
+            <div class="field"><label for="banner_url">URL do banner</label><input id="banner_url" name="banner_url" type="url" placeholder="https://..."><small>Use banner horizontal. Se desativar o banner, este campo fica opcional e não aparece no site.</small></div><div class="field"><label for="banner_alt">Texto alternativo do banner</label><input id="banner_alt" name="banner_alt"></div><div class="field"><label for="banner_credit">Crédito/fonte do banner</label><input id="banner_credit" name="banner_credit"></div><div class="preview-card banner-preview-card" data-banner-preview><p class="muted">Cole uma URL para visualizar o banner.</p></div>
+          </div>
+        </div>
       </div>
     </section>
 

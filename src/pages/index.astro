@@ -9,62 +9,67 @@ const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url, potentialAction: { '@type': 'SearchAction', target: `${SITE.url}/explorar/?q={search_term_string}`, 'query-input': 'required name=search_term_string' } }
 ];
 ---
-<BaseLayout title="Light novels e webnovels autorais" description={SITE.description} jsonLd={jsonLd}>
-  <section class="hero" data-home-page>
-    <div class="container hero-grid">
-      <div class="hero-card">
-        <span class="eyebrow">Plataforma editorial da Ryuzen</span>
-        <h1>Leia novels autorais em uma plataforma feita para descoberta.</h1>
-        <p class="lead">O Ryuzen Read Plus reúne light novels, webnovels e projetos originais em texto, com catálogo curado, leitura confortável e estrutura preparada para SEO.</p>
+<BaseLayout title="Novels e webnovels para descobrir" description="Leia light novels, webnovels e histórias seriadas selecionadas pela Ryuzen." jsonLd={jsonLd}>
+  <section class="home-showcase" data-home-page>
+    <div class="container">
+      <div class="home-carousel surface" data-home-carousel aria-label="Destaques da Ryuzen">
+        <div class="carousel-loading"><span class="eyebrow">Destaques</span><h1>Histórias para acompanhar capítulo após capítulo.</h1><p class="lead">Carregando os lançamentos disponíveis para leitura.</p></div>
+      </div>
+      <div class="home-discovery-bar surface">
+        <div>
+          <strong>Encontre sua próxima leitura</strong>
+          <p class="muted">Busque por título, autor, gênero ou tag.</p>
+        </div>
         <SearchBar />
-        <div class="actions">
-          <a class="btn primary" href="/explorar/">Explorar catálogo</a>
-          <a class="btn soft" href="/para-autores/">Sou autor</a>
-        </div>
+        <a class="btn soft" href="/explorar/">Explorar catálogo</a>
       </div>
-      <div class="surface info-card">
-        <span class="eyebrow">Comece por aqui</span>
-        <h2>Capítulos recentes</h2>
-        <div class="chapter-list" data-home-recent>
-          <div class="surface empty-state"><h2>Carregando capítulos...</h2><p class="muted">Buscando publicações reais.</p></div>
-        </div>
-      </div>
+    </div>
+  </section>
+
+  <section class="page-section hidden" data-home-continue-section>
+    <div class="container">
+      <SectionHeader eyebrow="De volta à história" title="Continue lendo" description="Retome de onde parou neste dispositivo." />
+      <div data-home-continue></div>
     </div>
   </section>
 
   <section class="page-section">
     <div class="container">
-      <SectionHeader eyebrow="Curadoria" title="Obras em destaque" description="Seleção editorial para novos leitores conhecerem as novels da Ryuzen." href="/explorar/" />
+      <SectionHeader eyebrow="Atualizações" title="Capítulos recentes" description="Novos capítulos prontos para leitura." href="/novidades/" linkLabel="Ver novidades" />
+      <div data-home-recent><div class="surface empty-state"><h2>Carregando capítulos...</h2><p class="muted">Buscando novas leituras.</p></div></div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="container">
+      <SectionHeader eyebrow="Curadoria" title="Obras em destaque" description="Histórias selecionadas para você começar agora." href="/explorar/" />
       <div data-home-featured></div>
     </div>
   </section>
 
   <section class="page-section">
-    <div class="container">
-      <SectionHeader title="Novidades da plataforma" description="Obras e atualizações recentes para acompanhar desde o começo." href="/novidades/" />
-      <div data-home-latest></div>
-    </div>
-  </section>
-
-  <section class="page-section">
-    <div class="container two-column">
+    <div class="container two-column home-columns">
       <div>
-        <SectionHeader title="Gratuitos para começar" description="Novels abertas para testar a leitura sem atrito." href="/gratuitos/" />
+        <SectionHeader title="Novidades da plataforma" description="Lançamentos e obras atualizadas recentemente." href="/novidades/" />
+        <div data-home-latest></div>
+      </div>
+      <div>
+        <SectionHeader title="Gratuitos para começar" description="Abra o primeiro capítulo e conheça novas histórias." href="/gratuitos/" />
         <div data-home-free></div>
       </div>
-      <div>
-        <div class="surface info-card">
-          <SectionHeader title="Ranking" description="Curadoria editorial e prioridade manual da Ryuzen." href="/rankings/" />
-          <div data-home-ranking></div>
-        </div>
-      </div>
     </div>
   </section>
 
   <section class="page-section">
-    <div class="container">
-      <SectionHeader title="Explore por gênero" description="Organização editorial para encontrar novas novels por tema." />
-      <div data-home-genres></div>
+    <div class="container two-column home-columns">
+      <div>
+        <SectionHeader title="Seleção da Ryuzen" description="Escolhas editoriais para conhecer a plataforma." href="/rankings/" linkLabel="Ver seleção" />
+        <div data-home-ranking></div>
+      </div>
+      <div>
+        <SectionHeader title="Explore por gênero" description="Encontre uma história pelo clima que procura." />
+        <div class="surface info-card" data-home-genres></div>
+      </div>
     </div>
   </section>
 

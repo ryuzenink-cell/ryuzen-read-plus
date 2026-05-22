@@ -6,11 +6,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="container">
       <span class="eyebrow">Conta</span>
       <h1>Minha biblioteca</h1>
-      <p class="lead">Seu espaço para favoritos, progresso de leitura e histórico. A biblioteca mostra apenas obras reais publicadas.</p>
-
+      <p class="lead">Obras que você acompanha e caminhos rápidos para retomar a leitura.</p>
       <div class="surface empty-state" data-library-state>
         <h2>Carregando sua biblioteca...</h2>
-        <p class="muted">Verificando se você está logado.</p>
+        <p class="muted">Preparando suas leituras salvas.</p>
       </div>
     </div>
   </section>
@@ -18,27 +17,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     (() => {
       const state = document.querySelector('[data-library-state]');
       if (!state) return;
-      const escapeHtml = (value) => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-      const renderGuest = () => {
-        state.innerHTML = `<h2>Entre na sua conta para salvar obras e continuar lendo de onde parou.</h2><p class="muted">Faça login ou crie uma conta para usar a biblioteca.</p><div class="actions centered"><a class="btn primary" href="/login/?next=/biblioteca/">Entrar</a><a class="btn soft" href="/cadastro/">Criar conta</a></div>`;
-      };
-      fetch('/api/library', { credentials: 'include' })
-        .then(async (response) => ({ response, data: await response.json().catch(() => null) }))
-        .then(({ response, data }) => {
-          if (response.status === 401) return renderGuest();
-          if (!response.ok || !data || !data.ok) {
-            state.innerHTML = `<h2>Não foi possível carregar sua biblioteca.</h2><p class="muted">${escapeHtml(data?.message || 'Tente novamente em alguns instantes.')}</p>`;
-            return;
-          }
-          if (!data.items || data.items.length === 0) {
-            state.innerHTML = `<h2>Sua biblioteca ainda está vazia.</h2><p class="muted">Olá, ${escapeHtml(data.user?.name || 'leitor')}! Quando você salvar novels publicadas, elas aparecerão aqui.</p><div class="actions centered"><a class="btn primary" href="/explorar/">Explorar catálogo</a></div>`;
-            return;
-          }
-          const items = data.items.map((item) => `<article class="chapter-item"><div><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.status || 'Salva')}</small></div><a class="btn soft" href="/obra/${escapeHtml(item.slug)}/">Continuar</a></article>`).join('');
-          state.classList.remove('empty-state');
-          state.innerHTML = `<h2>Obras salvas</h2><div class="chapter-list">${items}</div>`;
-        })
-        .catch(renderGuest);
+      const esc = (value) => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      const guest = () => { state.innerHTML = `<h2>Entre para montar sua biblioteca.</h2><p class="muted">Salve novels e encontre rapidamente o próximo capítulo quando retornar.</p><div class="actions centered"><a class="btn primary" href="/login/?next=/biblioteca/">Entrar</a><a class="btn soft" href="/cadastro/">Criar conta</a></div>`; };
+      const load = () => fetch('/api/library', { credentials: 'include' }).then(async (response) => ({ response, data: await response.json().catch(() => null) })).then(({ response, data }) => {
+        if (response.status === 401) return guest();
+        if (!response.ok || !data?.ok) { state.innerHTML = `<h2>Não foi possível carregar sua biblioteca.</h2><p class="muted">${esc(data?.message || 'Tente novamente em alguns instantes.')}</p>`; return; }
+        if (!data.items?.length) { state.innerHTML = `<h2>Sua biblioteca ainda está vazia.</h2><p class="muted">Olá, ${esc(data.user?.name || 'leitor')}! Explore o catálogo e adicione uma história para acompanhar.</p><div class="actions centered"><a class="btn primary" href="/explorar/">Explorar catálogo</a></div>`; return; }
+        state.classList.remove('empty-state');
+        state.innerHTML = `<div class="section-header"><div><h2>Obras acompanhadas</h2><p>Continue de onde parou ou abra o sumário de capítulos.</p></div></div><div class="library-grid">${data.items.map((item) => { const destination = item.last_chapter_slug ? `/obra/${esc(item.slug)}/${esc(item.last_chapter_slug)}/` : `/obra/${esc(item.slug)}/`; const progress = Math.round(Number(item.progress_percent || 0)); return `<article class="surface library-card">${item.cover_url ? `<img src="${esc(item.cover_url)}" alt="${esc(item.cover_alt || '')}" loading="lazy">` : ''}<div><h3>${esc(item.title)}</h3><p class="muted">${item.last_chapter_title ? `Último capítulo: ${esc(item.last_chapter_title)}` : 'Pronta para começar'}</p>${item.last_chapter_slug ? `<div class="reading-meter"><span style="width:${Math.max(2, progress)}%"></span></div><small class="muted">${progress}% lido no último capítulo</small>` : ''}<div class="actions"><a class="btn primary" href="${destination}">${item.last_chapter_slug ? 'Continuar' : 'Começar'}</a><a class="btn ghost" href="/obra/${esc(item.slug)}/">Ver obra</a><button class="btn ghost" type="button" data-library-remove="${esc(item.work_id)}">Remover</button></div></div></article>`; }).join('')}</div>`;
+      }).catch(guest);
+      state.addEventListener('click', async (event) => { const button = event.target.closest('[data-library-remove]'); if (!button) return; button.disabled = true; try { const response = await fetch('/api/library', { method: 'DELETE', credentials: 'include', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ work_id: button.dataset.libraryRemove }) }); const data = await response.json(); if (!response.ok || !data.ok) throw new Error(data.message); await load(); } catch { button.disabled = false; } });
+      load();
     })();
   </script>
 </BaseLayout>

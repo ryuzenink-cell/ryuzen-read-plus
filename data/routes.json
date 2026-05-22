@@ -1,123 +1,33 @@
 {
   "public": [
-    {
-      "name": "Home",
-      "path": "/",
-      "mvp": true
-    },
-    {
-      "name": "Explorar",
-      "path": "/explorar/",
-      "mvp": true
-    },
-    {
-      "name": "Gratuitos",
-      "path": "/gratuitos/",
-      "mvp": true
-    },
-    {
-      "name": "Novidades",
-      "path": "/novidades/",
-      "mvp": true
-    },
-    {
-      "name": "Rankings",
-      "path": "/rankings/",
-      "mvp": true
-    },
-    {
-      "name": "Obra",
-      "path": "/obra/:slug/",
-      "mvp": true
-    },
-    {
-      "name": "Capítulo",
-      "path": "/obra/:slug/capitulo/:capituloSlug/",
-      "mvp": true
-    },
-    {
-      "name": "Para autores",
-      "path": "/para-autores/",
-      "mvp": true
-    },
-    {
-      "name": "Enviar obra",
-      "path": "/enviar-obra/",
-      "mvp": true
-    },
-    {
-      "name": "Sobre",
-      "path": "/sobre/",
-      "mvp": true
-    },
-    {
-      "name": "Contato",
-      "path": "/contato/",
-      "mvp": true
-    },
-    {
-      "name": "Termos",
-      "path": "/termos/",
-      "mvp": true
-    },
-    {
-      "name": "Privacidade",
-      "path": "/privacidade/",
-      "mvp": true
-    }
+    { "name": "Home", "path": "/", "mvp": true },
+    { "name": "Explorar", "path": "/explorar/", "mvp": true },
+    { "name": "Gratuitos", "path": "/gratuitos/", "mvp": true },
+    { "name": "Novidades", "path": "/novidades/", "mvp": true },
+    { "name": "Rankings / Seleção editorial", "path": "/rankings/", "mvp": true },
+    { "name": "Obra", "path": "/obra/:slug/", "mvp": true },
+    { "name": "Capítulo", "path": "/obra/:slug/:chapterSlug/", "mvp": true },
+    { "name": "Para autores", "path": "/para-autores/", "mvp": true },
+    { "name": "Enviar obra", "path": "/enviar-obra/", "mvp": true },
+    { "name": "Sobre", "path": "/sobre/", "mvp": true },
+    { "name": "Contato", "path": "/contato/", "mvp": true },
+    { "name": "Termos", "path": "/termos/", "mvp": true },
+    { "name": "Privacidade", "path": "/privacidade/", "mvp": true }
   ],
   "account": [
-    {
-      "name": "Entrar",
-      "path": "/entrar/",
-      "mvp": true
-    },
-    {
-      "name": "Cadastro",
-      "path": "/cadastro/",
-      "mvp": true
-    },
-    {
-      "name": "Recuperar senha",
-      "path": "/recuperar-senha/",
-      "mvp": true
-    },
-    {
-      "name": "Minha Biblioteca",
-      "path": "/minha-biblioteca/",
-      "mvp": true
-    },
-    {
-      "name": "Preferências",
-      "path": "/preferencias/",
-      "mvp": true
-    }
+    { "name": "Entrar", "path": "/login/", "mvp": true },
+    { "name": "Cadastro", "path": "/cadastro/", "mvp": true },
+    { "name": "Recuperar senha", "path": "/recuperar-senha/", "mvp": true },
+    { "name": "Nova senha", "path": "/nova-senha/", "mvp": true },
+    { "name": "Minha Biblioteca", "path": "/biblioteca/", "mvp": true },
+    { "name": "Minha conta", "path": "/conta/", "mvp": true }
   ],
   "admin": [
-    {
-      "name": "Dashboard",
-      "path": "/admin/",
-      "mvp": true
-    },
-    {
-      "name": "Obras",
-      "path": "/admin/obras/",
-      "mvp": true
-    },
-    {
-      "name": "Capítulos",
-      "path": "/admin/capitulos/",
-      "mvp": true
-    },
-    {
-      "name": "Destaques",
-      "path": "/admin/destaques/",
-      "mvp": true
-    },
-    {
-      "name": "Métricas",
-      "path": "/admin/metricas/",
-      "mvp": false
-    }
+    { "name": "Dashboard", "path": "/admin/", "mvp": true },
+    { "name": "Obras", "path": "/admin/obras/", "mvp": true },
+    { "name": "Nova obra", "path": "/admin/obras/nova/", "mvp": true },
+    { "name": "Capítulos", "path": "/admin/capitulos/", "mvp": true },
+    { "name": "Destaques", "path": "/admin/destaques/", "mvp": true },
+    { "name": "Banners da home", "path": "/admin/banners/", "mvp": true }
   ]
 }

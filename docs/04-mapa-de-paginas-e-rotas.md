@@ -12,7 +12,7 @@
 | Tags | `/tags/` | Lista de tags e temas. | Pós-MVP |
 | Gênero | `/generos/:genero/` | Obras por gênero. | Sim |
 | Obra | `/obra/:slug/` | Página individual da obra. | Sim |
-| Capítulo | `/obra/:slug/capitulo/:capituloSlug/` | Leitor de texto. | Sim |
+| Capítulo | `/obra/:slug/:chapterSlug/` | Leitor de texto. | Sim |
 | Autor | `/autor/:slug/` | Perfil público de autor. | Pós-MVP |
 | Evento | `/eventos/:slug/` | Votações/concursos. | Pós-MVP |
 | Para autores | `/para-autores/` | Explicar envio, curadoria e proposta. | Sim |
@@ -27,10 +27,10 @@
 
 | Página | Rota | Objetivo | MVP |
 |---|---|---|---:|
-| Login | `/entrar/` | Autenticação. | Sim |
+| Login | `/login/` | Autenticação. | Sim |
 | Cadastro | `/cadastro/` | Criar conta. | Sim |
 | Recuperar senha | `/recuperar-senha/` | Recuperação de senha. | Sim |
-| Biblioteca | `/minha-biblioteca/` | Obras acompanhadas. | Sim |
+| Biblioteca | `/biblioteca/` | Obras acompanhadas. | Sim |
 | Histórico | `/historico/` | Leituras recentes. | Pós-MVP |
 | Preferências | `/preferencias/` | Tema, notificações e conta. | Sim |
 
@@ -62,3 +62,10 @@
 - Evitar acentos na URL.
 - Preservar URLs antigas com redirects se o título mudar.
 - Usar canonical nas páginas públicas.
+
+
+### Curadoria da página inicial
+
+| Página | Rota | Função | MVP |
+|---|---|---|---|
+| Banners da home | `/admin/banners/` | Configurar carrossel público com 1 a 6 banners por URL ou reaproveitamento de obra publicada. | Sim |

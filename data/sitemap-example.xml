@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://read.ryuzen.ink/</loc><priority>1.0</priority></url>
-  <url><loc>https://read.ryuzen.ink/explorar/</loc><priority>0.8</priority></url>
-  <url><loc>https://read.ryuzen.ink/rankings/</loc><priority>0.7</priority></url>
-  <url><loc>https://read.ryuzen.ink/gratuitos/</loc><priority>0.8</priority></url>
-  <url><loc>https://read.ryuzen.ink/novidades/</loc><priority>0.8</priority></url>
-  <url><loc>https://read.ryuzen.ink/para-autores/</loc><priority>0.6</priority></url>
-  <url><loc>https://read.ryuzen.ink/sobre/</loc><priority>0.4</priority></url>
-  <url><loc>https://read.ryuzen.ink/termos/</loc><priority>0.3</priority></url>
-  <url><loc>https://read.ryuzen.ink/privacidade/</loc><priority>0.3</priority></url>
-  <url><loc>https://read.ryuzen.ink/contato/</loc><priority>0.4</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/</loc><priority>1.0</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/explorar/</loc><priority>0.8</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/rankings/</loc><priority>0.7</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/gratuitos/</loc><priority>0.8</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/novidades/</loc><priority>0.8</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/para-autores/</loc><priority>0.6</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/sobre/</loc><priority>0.4</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/termos/</loc><priority>0.3</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/privacidade/</loc><priority>0.3</priority></url>
+  <url><loc>https://readplus.ryuzen.ink/contato/</loc><priority>0.4</priority></url>
 </urlset>

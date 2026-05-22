@@ -5,18 +5,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="page-section" data-catalog-page>
     <div class="container">
       <span class="eyebrow">Catálogo</span>
-      <h1>Explorar novels</h1>
-      <p class="lead">Filtre por tipo, gênero, status ou disponibilidade. O catálogo agora usa obras reais publicadas pelo painel admin.</p>
-      <div class="surface info-card" style="margin: 1rem 0;">
+      <h1>Descubra sua próxima novel</h1>
+      <p class="lead">Explore histórias em capítulos por gênero, status ou disponibilidade.</p>
+      <div class="surface info-card catalog-filters">
         <div class="form-grid admin-form-grid" data-filters>
-          <div class="field"><label for="q">Busca</label><input id="q" data-filter="q" placeholder="Título, autor, gênero ou tag" /></div>
+          <div class="field"><label for="q">Busca</label><input id="q" data-filter="q" type="search" placeholder="Título, autor, gênero ou tag" /></div>
           <div class="field"><label for="type">Tipo</label><select id="type" data-filter="type"><option value="">Todos</option><option value="light_novel">Light Novel</option><option value="webnovel">Webnovel</option></select></div>
           <div class="field"><label for="genre">Gênero</label><select id="genre" data-filter="genre"><option value="">Todos</option></select></div>
           <div class="field"><label for="status">Status</label><select id="status" data-filter="status"><option value="">Todos</option><option value="ongoing">Em andamento</option><option value="completed">Concluídas</option><option value="development">Em desenvolvimento</option><option value="paused">Pausadas</option></select></div>
-          <div class="field"><label for="free">Disponibilidade</label><select id="free" data-filter="free"><option value="">Todas</option><option value="true">Gratuitas</option><option value="false">Comercial/externa</option></select></div>
+          <div class="field"><label for="free">Disponibilidade</label><select id="free" data-filter="free"><option value="">Todas</option><option value="true">Gratuitas</option><option value="false">Leituras especiais</option></select></div>
+          <button class="btn ghost filter-clear" type="button" data-clear-filters>Limpar filtros</button>
         </div>
       </div>
-      <div data-catalog-grid><div class="surface empty-state"><h2>Carregando catálogo...</h2><p class="muted">Buscando obras publicadas.</p></div></div>
+      <div class="catalog-result-meta" data-result-meta aria-live="polite"></div>
+      <div data-catalog-grid><div class="surface empty-state"><h2>Carregando catálogo...</h2><p class="muted">Buscando obras disponíveis.</p></div></div>
     </div>
   </section>
   <script src="/assets/editorial-public.js" defer></script>

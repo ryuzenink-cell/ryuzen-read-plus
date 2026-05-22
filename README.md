@@ -64,6 +64,10 @@ A migration `0004_editorial_publication_system.sql` adiciona o modelo editorial 
 - SEO;
 - status de publicação.
 
+
+A migration `0005_home_banner_carousel_and_reader_progress.sql` adiciona o carrossel editorial da Home, permitindo banners configuráveis por URL externa ou reaproveitados de obras publicadas.
+
+
 ## Fluxo editorial
 
 1. Entre com uma conta `admin` ou `editor`.
@@ -73,7 +77,8 @@ A migration `0004_editorial_publication_system.sql` adiciona o modelo editorial 
 5. Salve como rascunho ou publique.
 6. Crie capítulos em `/admin/capitulos/`.
 7. Marque uma obra como destaque em `/admin/destaques/` ou no formulário da obra.
-8. A obra publicada aparece automaticamente no catálogo, home, página da obra, novidades, gratuitos e ranking editorial quando aplicável.
+8. Configure de 1 a 6 banners da Home em `/admin/banners/`, reutilizando banners de obras publicadas ou URLs externas.
+9. A obra publicada aparece automaticamente no catálogo, home, página da obra, novidades, gratuitos e seleção editorial quando aplicável.
 
 ## Imagens externas
 
@@ -106,6 +111,8 @@ Públicas:
 - `GET /api/works/:slug/:chapterSlug`
 - `GET /api/genres`
 - `GET /api/search`
+- `GET/POST/DELETE /api/library`
+- `POST /api/progress`
 
 Administrativas:
 
@@ -116,6 +123,8 @@ Administrativas:
 - `GET/POST /api/admin/featured`
 - `PATCH/DELETE /api/admin/featured/:id`
 - `GET /api/admin/overview`
+- `GET/POST /api/admin/banners`
+- `PATCH/DELETE /api/admin/banners/:id`
 
 ## Segurança
 
@@ -128,3 +137,12 @@ Administrativas:
 ## Observações
 
 Não edite `dist/` manualmente. Altere os arquivos em `src/`, `functions/`, `public/` e `migrations/`, depois rode o build.
+
+
+## Experiência pública e retenção
+
+- A Home apresenta um carrossel editorial de banners com controles acessíveis e comportamento responsivo.
+- O leitor registra localmente o capítulo e a posição aproximada, habilitando a seção **Continue lendo** na Home sem exigir conta.
+- Contas autenticadas podem adicionar/remover obras da biblioteca e sincronizar progresso de leitura.
+- A página de capítulo inclui barra de progresso, tempo estimado, navegação e ações de retorno.
+- O domínio canônico oficial utilizado no projeto é `https://readplus.ryuzen.ink`.

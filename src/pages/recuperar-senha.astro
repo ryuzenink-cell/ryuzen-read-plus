@@ -62,7 +62,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           show(data.message || 'Solicitação recebida.', 'success');
           if (data.resetUrl) {
             resetLink.className = 'notice info';
-            resetLink.innerHTML = `Teste interno do MVP: <a href="${data.resetUrl}">abrir link de redefinição</a>`;
+            resetLink.innerHTML = `Link temporário disponível neste ambiente: <a href="${data.resetUrl}">redefinir senha</a>`;
           }
         } catch {
           show('Falha de conexão com a API de recuperação.', 'error');

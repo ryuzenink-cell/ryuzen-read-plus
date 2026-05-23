@@ -1,69 +1,75 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/site';
+
+const emailSubject = encodeURIComponent('Envio de obra para análise editorial — Ryuzen Read Plus');
+const emailBody = encodeURIComponent(`Olá, equipe Ryuzen!\n\nGostaria de enviar minha obra para análise editorial.\n\nNome/pseudônimo:\nTítulo da obra:\nTipo (Light Novel ou Webnovel):\nGêneros:\nSinopse breve:\nStatus da obra e quantidade de capítulos:\nLink para leitura ou arquivo:\n\nObrigado(a)!`);
+const mailto = `mailto:${SITE.email}?subject=${emailSubject}&body=${emailBody}`;
 ---
-<BaseLayout title="Enviar obra" description="Formulário para autores interessados em publicar ou divulgar obras no Ryuzen Read Plus.">
-  <section class="page-section">
+<BaseLayout title="Enviar obra" description="Envie sua light novel ou webnovel para análise editorial da Ryuzen Read Plus por e-mail.">
+  <section class="page-section submission-page">
     <div class="container">
-      <div class="surface form-card">
-        <span class="eyebrow">Autores</span>
-        <h1>Enviar obra para análise</h1>
-        <p class="muted">O formulário registra sua proposta para triagem editorial.</p>
+      <div class="submission-hero surface">
+        <div class="submission-intro">
+          <span class="eyebrow">Para autores</span>
+          <h1>Apresente sua obra à Ryuzen.</h1>
+          <p class="lead">Estamos conhecendo light novels e webnovels autorais para futuras publicações e destaques na Ryuzen Read Plus.</p>
+          <p class="muted">O envio é feito diretamente por e-mail para mantermos uma conversa cuidadosa sobre a obra, seus objetivos e a forma mais adequada de apresentá-la aos leitores.</p>
+          <a class="submission-email" href={mailto} aria-label={`Enviar obra para ${SITE.email}`}>
+            <span>Envie sua obra para</span>
+            <strong>{SITE.email}</strong>
+          </a>
+          <div class="actions">
+            <a class="btn primary" href={mailto}>Preparar e-mail de envio</a>
+            <a class="btn soft" href="/para-autores/">Conhecer a proposta</a>
+          </div>
+        </div>
 
-        <div class="notice hidden" data-submission-message role="status"></div>
+        <aside class="surface submission-summary" aria-label="Resumo do envio">
+          <span class="eyebrow">Análise editorial</span>
+          <h2>O que procuramos</h2>
+          <ul class="submission-checklist">
+            <li>Histórias seriadas originais em texto.</li>
+            <li>Light novels ou webnovels com identidade própria.</li>
+            <li>Obras com sinopse clara e material disponível para avaliação.</li>
+            <li>Autores interessados em construir uma apresentação profissional.</li>
+          </ul>
+        </aside>
+      </div>
 
-        <form class="form-grid" data-submission-form>
-          <div class="field"><label for="name">Nome do autor</label><input id="name" name="name" required placeholder="Seu nome ou pseudônimo" /></div>
-          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required placeholder="voce@email.com" /></div>
-          <div class="field"><label for="title">Título da obra</label><input id="title" name="title" required /></div>
-          <div class="field"><label for="type">Tipo</label><select id="type" name="type"><option>Light Novel</option><option>Webnovel</option></select></div>
-          <div class="field"><label for="pitch">Resumo / proposta</label><textarea id="pitch" name="pitch" required minlength="30" placeholder="Explique a obra, público, links relevantes e estágio atual do projeto."></textarea></div>
-          <button class="btn primary" type="submit" data-submit>Enviar para análise</button>
-        </form>
+      <div class="submission-steps">
+        <article class="surface submission-card">
+          <span class="step-number">01</span>
+          <h2>Prepare sua apresentação</h2>
+          <p class="muted">Inclua nome ou pseudônimo, título, gênero, tipo de obra, sinopse e o estágio atual do projeto.</p>
+        </article>
+        <article class="surface submission-card">
+          <span class="step-number">02</span>
+          <h2>Envie o material</h2>
+          <p class="muted">Anexe um arquivo ou envie um link acessível para capítulos, apresentação ou obra publicada.</p>
+        </article>
+        <article class="surface submission-card">
+          <span class="step-number">03</span>
+          <h2>Aguarde a análise</h2>
+          <p class="muted">Caso a proposta combine com a curadoria da plataforma, entraremos em contato pelo e-mail enviado.</p>
+        </article>
+      </div>
+
+      <div class="surface submission-details">
+        <div>
+          <span class="eyebrow">Inclua no e-mail</span>
+          <h2>Informações recomendadas</h2>
+        </div>
+        <ul class="submission-requirements">
+          <li><strong>Identificação:</strong> nome do autor ou pseudônimo e contato.</li>
+          <li><strong>Obra:</strong> título, tipo — Light Novel ou Webnovel — e gêneros.</li>
+          <li><strong>Apresentação:</strong> sinopse breve e público que pretende alcançar.</li>
+          <li><strong>Material:</strong> link ou anexo com capítulos disponíveis para leitura.</li>
+          <li><strong>Status:</strong> se está em desenvolvimento, finalizada ou já publicada.</li>
+          <li><strong>Direitos:</strong> confirme que possui autorização para enviar e publicar o material.</li>
+        </ul>
+        <p class="submission-note muted">O envio não garante publicação. A análise considera aderência editorial, apresentação e disponibilidade da plataforma.</p>
       </div>
     </div>
   </section>
-  <script is:inline>
-    (() => {
-      const form = document.querySelector('[data-submission-form]');
-      const message = document.querySelector('[data-submission-message]');
-      const button = document.querySelector('[data-submit]');
-      if (!form || !message || !button) return;
-
-      const show = (text, type = 'info') => {
-        message.textContent = text;
-        message.className = `notice ${type}`;
-      };
-
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        button.disabled = true;
-        button.textContent = 'Enviando...';
-        show('Enviando proposta...', 'info');
-
-        const payload = Object.fromEntries(new FormData(form).entries());
-        try {
-          const response = await fetch('/api/author-submissions', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          const data = await response.json();
-
-          if (!response.ok || !data.ok) {
-            show(data.message || 'Não foi possível enviar a obra.', 'error');
-            return;
-          }
-
-          show(data.message || 'Proposta enviada.', 'success');
-          form.reset();
-        } catch {
-          show('Não foi possível enviar a proposta agora.', 'error');
-        } finally {
-          button.disabled = false;
-          button.textContent = 'Enviar para análise';
-        }
-      });
-    })();
-  </script>
 </BaseLayout>

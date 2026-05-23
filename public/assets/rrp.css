@@ -1189,12 +1189,22 @@ tbody tr:hover td {
   gap: 1rem;
   align-items: center;
   width: min(1050px, calc(100% - 2.5rem));
-  margin: -2rem auto 0;
+  margin: 1.15rem auto 0;
   padding: .9rem 1rem;
 }
 .home-discovery-bar strong { display: block; font-size: 1rem; }
 .home-discovery-bar p { margin: 0; font-size: .88rem; }
 .home-discovery-bar .search-bar { width: 100%; box-shadow: none; }
+.home-discovery-bar {
+  box-shadow: 0 13px 34px rgba(67, 42, 29, .07);
+}
+/* O bloco de descoberta permanece abaixo do banner para que CTAs longos nunca
+   sejam encobertos, inclusive quando um título ocupa várias linhas. */
+.carousel-content .actions {
+  position: relative;
+  z-index: 2;
+}
+
 .home-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .home-columns .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .compact-grid .work-card-body p { display: none; }

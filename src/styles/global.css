@@ -1722,3 +1722,32 @@ tbody tr:hover td {
 @media (max-width: 850px) {
   .submission-hero, .submission-steps, .submission-requirements { grid-template-columns: 1fr; }
 }
+
+
+/* PWA: instalacao e atualizacoes discretas; nao aparece no painel editorial ou no leitor. */
+.footer-pwa { margin-top: 1.6rem; }
+.pwa-tools { display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; }
+.pwa-install-button { min-height: 44px; }
+.pwa-ios-help, .pwa-update {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  max-width: 560px;
+  padding: .8rem 1rem;
+}
+.pwa-ios-help[hidden], .pwa-update[hidden] { display: none; }
+.pwa-ios-help p, .pwa-update p { margin: 0; color: var(--color-text-muted); font-size: .92rem; }
+.pwa-dismiss {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 1.35rem;
+  line-height: 1;
+  padding: .3rem;
+}
+@media (display-mode: standalone) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  .site-header, .reader-topbar { padding-top: env(safe-area-inset-top); }
+}

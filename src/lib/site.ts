@@ -1,5 +1,5 @@
 export const SITE = {
-  name: 'Ryuzen Read Plus',
+  name: 'Ryuzen ReadPlus',
   shortName: 'RRP',
   url: 'https://readplus.ryuzen.ink',
   description: 'Plataforma de leitura digital da Ryuzen para light novels, webnovels e obras autorais em texto.',

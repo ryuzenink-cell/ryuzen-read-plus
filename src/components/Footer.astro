@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../lib/site';
+import InstallAppButton from './InstallAppButton.astro';
 ---
 <footer class="site-footer">
   <div class="container footer-grid">
@@ -27,5 +28,8 @@ import { SITE } from '../lib/site';
       <a href="/termos/">Termos</a>
       <a href="/privacidade/">Privacidade</a>
     </div>
+  </div>
+  <div class="container footer-pwa">
+    <InstallAppButton />
   </div>
 </footer>

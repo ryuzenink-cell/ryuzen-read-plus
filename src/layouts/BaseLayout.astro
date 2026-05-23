@@ -33,7 +33,13 @@ const imageUrl = image.startsWith('http') ? image : absoluteUrl(image);
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/icons/favicon-32x32.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#8f4f36" data-theme-color />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="ReadPlus" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={SITE.locale} />
     <meta property="og:site_name" content={SITE.name} />
@@ -49,9 +55,12 @@ const imageUrl = image.startsWith('http') ? image : absoluteUrl(image);
       (() => {
         try {
           const saved = localStorage.getItem('rrp-theme');
-          document.documentElement.dataset.theme = saved === 'dark' ? 'dark' : 'light';
+          const theme = saved === 'dark' ? 'dark' : 'light';
+          document.documentElement.dataset.theme = theme;
+          document.querySelector('[data-theme-color]')?.setAttribute('content', theme === 'dark' ? '#181411' : '#8f4f36');
         } catch {
           document.documentElement.dataset.theme = 'light';
+          document.querySelector('[data-theme-color]')?.setAttribute('content', '#8f4f36');
         }
       })();
     </script>
@@ -78,6 +87,7 @@ const imageUrl = image.startsWith('http') ? image : absoluteUrl(image);
           const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
           html.dataset.theme = next;
           localStorage.setItem('rrp-theme', next);
+          document.querySelector('[data-theme-color]')?.setAttribute('content', next === 'dark' ? '#181411' : '#8f4f36');
           updateState();
         });
       });

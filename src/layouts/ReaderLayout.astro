@@ -15,6 +15,12 @@ const fullTitle = `${title} | ${SITE.name}`;
     <meta name="description" content={description} />
     <link rel="canonical" href={absoluteUrl(Astro.url.pathname)} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#8f4f36" data-theme-color />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="ReadPlus" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={absoluteUrl(Astro.url.pathname)} />
@@ -23,7 +29,9 @@ const fullTitle = `${title} | ${SITE.name}`;
       (() => {
         const saved = localStorage.getItem('rrp-theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+        const theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('[data-theme-color]')?.setAttribute('content', theme === 'dark' ? '#181411' : '#8f4f36');
         const size = localStorage.getItem('rrp-reader-font-size');
         if (size) document.documentElement.style.setProperty('--reader-font-size', `${size}px`);
       })();
@@ -33,7 +41,7 @@ const fullTitle = `${title} | ${SITE.name}`;
   <body>
     <header class="reader-topbar">
       <div class="container reader-topbar-inner">
-        <a class="brand" href="/" aria-label="Ryuzen Read Plus"><img src="/icons/favicon-32x32.png" alt="" /> <span>{SITE.shortName}<small>Modo leitura</small></span></a>
+        <a class="brand" href="/" aria-label="Ryuzen ReadPlus"><img src="/icons/favicon-32x32.png" alt="" /> <span>{SITE.shortName}<small>Modo leitura</small></span></a>
         <div class="reader-actions">
           <ThemeToggle />
           <ReaderToolbar workUrl={workUrl} prevUrl={prevUrl} nextUrl={nextUrl} />
@@ -55,6 +63,7 @@ const fullTitle = `${title} | ${SITE.name}`;
           const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
           html.dataset.theme = next;
           localStorage.setItem('rrp-theme', next);
+          document.querySelector('[data-theme-color]')?.setAttribute('content', next === 'dark' ? '#181411' : '#8f4f36');
         });
       });
       document.querySelectorAll('[data-reader-size]').forEach((button) => {
@@ -64,5 +73,6 @@ const fullTitle = `${title} | ${SITE.name}`;
         });
       });
     </script>
+    <script src="/assets/pwa-client.js" defer></script>
   </body>
 </html>

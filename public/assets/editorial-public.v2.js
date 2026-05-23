@@ -59,6 +59,13 @@
   function initCarousel(banners) {
     const root = $('[data-home-carousel]');
     if (!root) return;
+
+    const AUTOPLAY_INTERVAL = 7000;
+    if (typeof window.__RRP_HOME_CAROUSEL_CLEANUP__ === 'function') {
+      window.__RRP_HOME_CAROUSEL_CLEANUP__();
+      window.__RRP_HOME_CAROUSEL_CLEANUP__ = null;
+    }
+
     if (!banners.length) {
       root.innerHTML = `<div class="carousel-empty">
         <span class="eyebrow">Ryuzen Read Plus</span>
@@ -79,12 +86,15 @@
           <div class="carousel-content">
             <span class="eyebrow">${esc(banner.eyebrow || 'Em destaque')}</span>
             <h1>${esc(banner.title)}</h1>
-            ${banner.description ? `<p class="lead">${esc(truncate(banner.description, 260))}</p>` : ''}
+            ${banner.description ? `<p class="lead">${esc(truncate(banner.description, 220))}</p>` : ''}
             <div class="actions"><a class="btn primary" href="${esc(banner.cta_url || '/explorar/')}">${esc(banner.cta_label || 'Começar leitura')}</a>${banner.work_slug ? `<a class="btn carousel-secondary" href="/obra/${esc(banner.work_slug)}/">Ver obra</a>` : ''}</div>
           </div>
         </article>`).join('')}
       </div>
       ${banners.length > 1 ? `<button class="carousel-arrow previous" type="button" data-carousel-prev aria-label="Banner anterior">‹</button><button class="carousel-arrow next" type="button" data-carousel-next aria-label="Próximo banner">›</button><div class="carousel-dots" role="tablist" aria-label="Banners">${banners.map((_, index) => `<button type="button" class="carousel-dot ${index === 0 ? 'is-active' : ''}" data-carousel-dot="${index}" aria-label="Mostrar banner ${index + 1}" aria-selected="${index === 0}"></button>`).join('')}</div>` : ''}`;
+
+    const controller = new AbortController();
+    const signal = controller.signal;
     $$('[data-carousel-image]', root).forEach((image) => {
       image.addEventListener('error', () => {
         const slide = image.closest('[data-carousel-slide]');
@@ -96,30 +106,40 @@
         }
         slide?.classList.add('has-image-error');
         image.remove();
-      });
+      }, { signal });
     });
-    if (banners.length < 2) return;
+    if (banners.length < 2) {
+      window.__RRP_HOME_CAROUSEL_CLEANUP__ = () => controller.abort();
+      return;
+    }
     const slides = $$('[data-carousel-slide]', root);
     const dots = $$('[data-carousel-dot]', root);
     let active = 0;
     let interval = null;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clearAutoplay = () => {
+      if (interval !== null) window.clearInterval(interval);
+      interval = null;
+    };
     const show = (next) => {
       active = (next + slides.length) % slides.length;
       slides.forEach((slide, index) => { slide.classList.toggle('is-active', index === active); slide.setAttribute('aria-hidden', String(index !== active)); });
       dots.forEach((dot, index) => { dot.classList.toggle('is-active', index === active); dot.setAttribute('aria-selected', String(index === active)); });
     };
     const autoplay = () => {
-      if (!reduceMotion) interval = window.setInterval(() => show(active + 1), 12000);
+      clearAutoplay();
+      if (!reduceMotion) interval = window.setInterval(() => show(active + 1), AUTOPLAY_INTERVAL);
     };
-    const restart = () => { if (interval) window.clearInterval(interval); autoplay(); };
-    $('[data-carousel-prev]', root)?.addEventListener('click', () => { show(active - 1); restart(); });
-    $('[data-carousel-next]', root)?.addEventListener('click', () => { show(active + 1); restart(); });
-    dots.forEach((dot) => dot.addEventListener('click', () => { show(Number(dot.dataset.carouselDot)); restart(); }));
-    root.addEventListener('mouseenter', () => interval && window.clearInterval(interval));
-    root.addEventListener('mouseleave', autoplay);
-    root.addEventListener('focusin', () => interval && window.clearInterval(interval));
-    root.addEventListener('focusout', autoplay);
+    const restart = () => autoplay();
+    $('[data-carousel-prev]', root)?.addEventListener('click', () => { show(active - 1); restart(); }, { signal });
+    $('[data-carousel-next]', root)?.addEventListener('click', () => { show(active + 1); restart(); }, { signal });
+    dots.forEach((dot) => dot.addEventListener('click', () => { show(Number(dot.dataset.carouselDot)); restart(); }, { signal }));
+    root.addEventListener('mouseenter', clearAutoplay, { signal });
+    root.addEventListener('mouseleave', autoplay, { signal });
+    root.addEventListener('focusin', clearAutoplay, { signal });
+    root.addEventListener('focusout', autoplay, { signal });
+    document.addEventListener('visibilitychange', () => { document.hidden ? clearAutoplay() : autoplay(); }, { signal });
+    window.__RRP_HOME_CAROUSEL_CLEANUP__ = () => { clearAutoplay(); controller.abort(); };
     autoplay();
   }
 

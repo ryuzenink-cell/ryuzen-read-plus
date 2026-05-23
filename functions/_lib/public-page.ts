@@ -4,7 +4,7 @@ const SITE_NAME = 'Ryuzen Read Plus';
 const SITE_URL = 'https://readplus.ryuzen.ink';
 const SITE_DESCRIPTION = 'Leia novels, webnovels e histórias seriadas na Ryuzen Read Plus.';
 const PUBLIC_STYLE = '/assets/rrp-public.v2.css';
-const ASSET_REVISION = '20260523-profile-1';
+const ASSET_REVISION = '20260523-visual-fix-1';
 const versionAsset = (path: string) => `${path}?v=${ASSET_REVISION}`;
 const dynamicHeaders = { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store, no-cache, must-revalidate, max-age=0', pragma: 'no-cache' };
 const NAV = [['/', 'Início'], ['/explorar/', 'Explorar'], ['/gratuitos/', 'Gratuitos'], ['/novidades/', 'Novidades'], ['/rankings/', 'Rankings'], ['/para-autores/', 'Para autores']];

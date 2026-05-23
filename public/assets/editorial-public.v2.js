@@ -110,7 +110,7 @@
       dots.forEach((dot, index) => { dot.classList.toggle('is-active', index === active); dot.setAttribute('aria-selected', String(index === active)); });
     };
     const autoplay = () => {
-      if (!reduceMotion) interval = window.setInterval(() => show(active + 1), 6500);
+      if (!reduceMotion) interval = window.setInterval(() => show(active + 1), 12000);
     };
     const restart = () => { if (interval) window.clearInterval(interval); autoplay(); };
     $('[data-carousel-prev]', root)?.addEventListener('click', () => { show(active - 1); restart(); });

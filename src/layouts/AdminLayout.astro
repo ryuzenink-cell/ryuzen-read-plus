@@ -2,108 +2,50 @@
 import '../styles/global.css';
 const { title = 'Painel editorial' } = Astro.props;
 const currentPath = Astro.url.pathname;
-const isActive = (href: string) => href !== '/' && (currentPath === href || currentPath.startsWith(href));
-const links = [
-  ['/admin/', 'Visão geral'],
-  ['/admin/obras/', 'Obras'],
-  ['/admin/obras/nova/', 'Nova obra'],
-  ['/admin/capitulos/', 'Capítulos'],
-  ['/admin/destaques/', 'Destaques'],
-  ['/admin/banners/', 'Banners da home'],
-  ['/', 'Voltar ao site']
+const active = (href: string) => href === '/admin/' ? currentPath === href : currentPath.startsWith(href.split('#')[0]);
+const groups = [
+  { title: 'Visão geral', links: [['/admin/', 'Dashboard'], ['/admin/atividade/', 'Atividade recente']] },
+  { title: 'Conteúdo', links: [['/admin/obras/', 'Obras'], ['/admin/obras/nova/', 'Nova obra'], ['/admin/capitulos/', 'Capítulos'], ['/admin/capitulos/#novo', 'Novo capítulo']] },
+  { title: 'Vitrine', links: [['/admin/banners/', 'Banners da home'], ['/admin/destaques/', 'Destaques']] },
+  { title: 'Planejamento', links: [['/admin/calendario/', 'Calendário editorial']] },
+  { title: 'Sistema', links: [['/admin/configuracoes/', 'Configurações'], ['/', 'Voltar ao site']] }
 ];
 ---
 <!doctype html>
-<html lang="pt-BR" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | Ryuzen Read Plus</title>
-    <link rel="icon" href="/favicon.ico" />
-    <script is:inline>
-      (() => {
-        const saved = localStorage.getItem('rrp-theme');
-        document.documentElement.dataset.theme = saved === 'dark' ? 'dark' : 'light';
-      })();
-    </script>
-  </head>
-  <body>
-    <div class="admin-shell" data-admin-shell>
-      <aside class="admin-sidebar">
-        <a class="brand" href="/admin/"><img src="/icons/favicon-32x32.png" alt="" /> <span>RRP<small>Admin</small></span></a>
-        <nav aria-label="Painel editorial">
-          {links.map(([href, label]) => <a href={href} aria-current={isActive(href) ? 'page' : undefined}>{label}</a>)}
-        </nav>
-      </aside>
-      <main class="admin-main is-checking" data-admin-main>
-        <div class="admin-topbar"><div><span class="eyebrow">Ryuzen ReadPlus</span><strong>Painel editorial de novels</strong></div><button class="theme-toggle" type="button" data-theme-toggle aria-label="Alternar tema"><span class="theme-toggle-icon">☀️</span><span class="theme-toggle-icon">/</span><span class="theme-toggle-icon">🌙</span></button></div>
-        <div class="surface admin-guard" data-admin-guard>
-          <span class="eyebrow">Segurança</span>
-          <h1>Verificando acesso...</h1>
-          <p class="lead">A área editorial exige sessão ativa com permissão de admin ou editor.</p>
-        </div>
-        <div class="admin-content hidden" data-admin-content>
-          <slot />
-        </div>
-      </main>
-    </div>
-    <script is:inline>
-      (() => {
-        const btn = document.querySelector('[data-theme-toggle]');
-        if (!btn) return;
-        btn.addEventListener('click', () => {
-          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-          document.documentElement.dataset.theme = next;
-          localStorage.setItem('rrp-theme', next);
-        });
-      })();
-    </script>
-    <script is:inline>
-      (() => {
-        const guard = document.querySelector('[data-admin-guard]');
-        const content = document.querySelector('[data-admin-content]');
-        const main = document.querySelector('[data-admin-main]');
-        if (!guard || !content || !main) return;
-
-        const escapeHtml = (value) => String(value || '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
-
-        fetch('/api/auth/me', { credentials: 'include' })
-          .then((response) => response.ok ? response.json() : null)
-          .then((data) => {
-            if (!data || !data.authenticated) {
-              const next = encodeURIComponent(window.location.pathname);
-              guard.innerHTML = `
-                <span class="eyebrow">Login necessário</span>
-                <h1>Entre para continuar</h1>
-                <p class="lead">Você precisa estar logado para acessar o painel editorial.</p>
-                <div class="actions"><a class="btn primary" href="/login/?next=${next}">Entrar</a><a class="btn soft" href="/">Voltar ao site</a></div>
-              `;
-              return;
-            }
-
-            if (!['admin', 'editor'].includes(data.user.role)) {
-              guard.innerHTML = `
-                <span class="eyebrow">Acesso restrito</span>
-                <h1>Sem permissão editorial</h1>
-                <p class="lead">A conta ${escapeHtml(data.user.email)} existe, mas não possui perfil de admin ou editor.</p>
-                <div class="actions"><a class="btn primary" href="/biblioteca/">Minha biblioteca</a><a class="btn soft" href="/">Voltar ao site</a></div>
-              `;
-              return;
-            }
-
-            guard.classList.add('hidden');
-            content.classList.remove('hidden');
-            main.classList.remove('is-checking');
-          })
-          .catch(() => {
-            guard.innerHTML = '<span class="eyebrow">Erro</span><h1>Não foi possível verificar acesso</h1><p class="lead">Confirme sua conexão e tente novamente.</p>';
-          });
-      })();
-    </script>
-  </body>
-</html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | Ryuzen Read Plus</title><link rel="icon" href="/favicon.ico" />
+  <script is:inline>(()=>{try{const saved=localStorage.getItem('rrp-theme');document.documentElement.dataset.theme=saved==='light'?'light':'dark'}catch{}})();</script>
+</head>
+<body>
+<div class="admin-shell" data-admin-shell>
+  <aside class="admin-sidebar" data-admin-sidebar>
+    <a class="brand" href="/admin/"><img src="/icons/favicon-32x32.png" alt="" /> <span>RRP<small>Admin editorial</small></span></a>
+    <button class="admin-menu-toggle btn ghost" type="button" aria-controls="admin-navigation" aria-expanded="false" data-admin-menu-toggle>Menu administrativo</button>
+    <nav id="admin-navigation" aria-label="Painel editorial" data-admin-navigation>
+      {groups.map((group) => <div class="admin-nav-group"><p>{group.title}</p>{group.links.map(([href, label]) => <a href={href} aria-current={active(href) ? 'page' : undefined}>{label}</a>)}</div>)}
+    </nav>
+  </aside>
+  <main class="admin-main is-checking" data-admin-main>
+    <div class="admin-topbar"><div><span class="eyebrow">Ryuzen ReadPlus</span><strong>Painel editorial de novels</strong></div><button class="theme-toggle" type="button" data-theme-toggle aria-label="Alternar tema">☀ / 🌙</button></div>
+    <div class="surface admin-guard" data-admin-guard><span class="eyebrow">Segurança</span><h1>Verificando acesso...</h1><p class="lead">A área editorial exige sessão ativa com permissão de admin ou editor.</p></div>
+    <div class="admin-content hidden" data-admin-content><slot /></div>
+  </main>
+</div>
+<script is:inline>
+(() => {
+ const toggle=document.querySelector('[data-theme-toggle]'); toggle?.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;localStorage.setItem('rrp-theme',next)});
+ const menu=document.querySelector('[data-admin-menu-toggle]'); const nav=document.querySelector('[data-admin-navigation]');
+ menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));nav?.classList.toggle('is-open',!open)});
+ const guard=document.querySelector('[data-admin-guard]'); const content=document.querySelector('[data-admin-content]'); const main=document.querySelector('[data-admin-main]');
+ if(!guard||!content||!main)return;
+ const esc=(v)=>String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+ fetch('/api/auth/me',{credentials:'include'}).then(r=>r.ok?r.json():null).then(data=>{
+  if(!data?.authenticated){const next=encodeURIComponent(location.pathname);guard.innerHTML=`<span class="eyebrow">Login necessário</span><h1>Entre para continuar</h1><p class="lead">Você precisa estar logado para acessar o painel editorial.</p><div class="actions"><a class="btn primary" href="/login/?next=${next}">Entrar</a><a class="btn soft" href="/">Voltar ao site</a></div>`;return;}
+  if(!['admin','editor'].includes(data.user.role)){guard.innerHTML=`<span class="eyebrow">Acesso restrito</span><h1>Sem permissão editorial</h1><p class="lead">A conta ${esc(data.user.email)} não possui acesso de edição.</p><a class="btn soft" href="/">Voltar ao site</a>`;return;}
+  guard.classList.add('hidden');content.classList.remove('hidden');main.classList.remove('is-checking');
+ }).catch(()=>{guard.innerHTML='<span class="eyebrow">Erro</span><h1>Não foi possível verificar acesso</h1><p class="lead">Confirme sua conexão e tente novamente.</p>'});
+})();
+</script>
+</body></html>

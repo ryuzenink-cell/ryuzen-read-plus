@@ -5,6 +5,8 @@ export const NOVEL_TYPES = ['light_novel', 'webnovel'];
 export const WORK_STATUSES = ['ongoing', 'completed', 'development', 'paused'];
 export const PUBLICATION_STATUSES = ['draft', 'scheduled', 'published', 'hidden', 'archived'];
 export const CONTENT_FORMATS = ['markdown', 'html', 'plain'];
+export const CHAPTER_TYPES = ['prologue', 'chapter', 'interlude', 'epilogue', 'extra'];
+export const ACCESS_MODELS = ['free', 'external', 'mixed'];
 
 export function nowIso() {
   return new Date().toISOString();
@@ -111,6 +113,16 @@ export async function adminGuard(request: Request, env: any) {
   return { user, denied: null };
 }
 
+export async function logAdminActivity(db: any, user: any, action: string, entityType: string, entityId: string | null, entityTitle: string | null, metadata: Record<string, unknown> = {}) {
+  try {
+    await db.prepare(`INSERT INTO admin_activity (id, action, entity_type, entity_id, entity_title, actor_id, actor_email, metadata, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+      crypto.randomUUID(), action, entityType, entityId, entityTitle, user?.id || null, user?.email || null, JSON.stringify(metadata), nowIso()
+    ).run();
+  } catch {
+    // Logging must never block editorial actions if the optional activity structure is unavailable.
+  }
+}
+
 export function publicWhere(alias = 'works') {
   return `${alias}.type IN ('light_novel', 'webnovel') AND ${alias}.publication_status = 'published'`;
 }
@@ -160,6 +172,8 @@ export function normalizeWorkPayload(body: any, current?: any) {
     title,
     slug,
     subtitle: nullableText(body.subtitle ?? current?.subtitle, 220),
+    alternate_title: nullableText(body.alternate_title ?? body.alternateTitle ?? current?.alternate_title, 220),
+    illustrator_name: nullableText(body.illustrator_name ?? body.illustratorName ?? current?.illustrator_name, 220),
     short_description: shortDescription,
     description,
     seo_title: seoTitle,
@@ -173,8 +187,12 @@ export function normalizeWorkPayload(body: any, current?: any) {
     cover_alt: nullableText(body.cover_alt ?? body.coverAlt ?? current?.cover_alt, 300),
     cover_credit: nullableText(body.cover_credit ?? body.coverCredit ?? current?.cover_credit, 500),
     banner_url: bannerUrl,
+    mobile_banner_url: assertImageUrl(nullableText(body.mobile_banner_url ?? body.mobileBannerUrl ?? current?.mobile_banner_url, 2000), 'A URL do banner mobile'),
+    social_image_url: assertImageUrl(nullableText(body.social_image_url ?? body.socialImageUrl ?? current?.social_image_url, 2000), 'A URL de compartilhamento'),
     banner_alt: nullableText(body.banner_alt ?? body.bannerAlt ?? current?.banner_alt, 300),
     banner_credit: nullableText(body.banner_credit ?? body.bannerCredit ?? current?.banner_credit, 500),
+    content_warnings: nullableText(body.content_warnings ?? body.contentWarnings ?? current?.content_warnings, 1000),
+    access_model: ACCESS_MODELS.includes(String(body.access_model ?? body.accessModel ?? current?.access_model)) ? String(body.access_model ?? body.accessModel ?? current?.access_model) : 'free',
     author_name: text(body.author_name ?? body.authorName ?? current?.author_name ?? 'Ryuzen', 220),
     editorial_notes: nullableText(body.editorial_notes ?? body.editorialNotes ?? current?.editorial_notes, 5000),
     is_free: boolInt(body.is_free ?? body.isFree ?? current?.is_free ?? 1),
@@ -201,8 +219,12 @@ export function normalizeChapterPayload(body: any, current?: any) {
   if (title.length < 2) throw new Error('Informe um título válido para o capítulo.');
   if (!slug) throw new Error('Informe um slug válido para o capítulo.');
   if (publicationStatus === 'published' && content.length < 20) throw new Error('Para publicar, o capítulo precisa ter conteúdo.');
+  const chapterType = CHAPTER_TYPES.includes(String(body.chapter_type ?? body.chapterType ?? current?.chapter_type)) ? String(body.chapter_type ?? body.chapterType ?? current?.chapter_type) : 'chapter';
   return {
     work_id: text(body.work_id ?? body.workId ?? current?.work_id, 80),
+    chapter_type: chapterType,
+    volume_number: intValue(body.volume_number ?? body.volumeNumber ?? current?.volume_number, 1),
+    order_index: intValue(body.order_index ?? body.orderIndex ?? current?.order_index, numberValue(body.number ?? current?.number, 1)),
     volume_id: nullableText(body.volume_id ?? body.volumeId ?? current?.volume_id, 80),
     number: numberValue(body.number ?? current?.number, 1),
     title,

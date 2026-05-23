@@ -1,6 +1,14 @@
 (() => {
   const shell = document.querySelector('[data-reader-shell]') || document.querySelector('.reader-shell');
   const progressBar = document.querySelector('[data-reading-progress-bar]');
+  const applySavedPreferences = () => {
+    const theme = localStorage.getItem('rrp-reader-theme') || 'dark';
+    const resolvedTheme = theme === 'system' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme;
+    document.documentElement.dataset.theme = resolvedTheme === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.readerLineHeight = localStorage.getItem('rrp-reader-line-height') || 'normal';
+    document.documentElement.dataset.readerContentWidth = localStorage.getItem('rrp-reader-content-width') || 'comfortable';
+  };
+  applySavedPreferences();
   const applySize = (size) => {
     if (!shell) return;
     const next = Math.min(26, Math.max(16, Number(size) || 19));

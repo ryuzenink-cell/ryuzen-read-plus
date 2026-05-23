@@ -206,3 +206,28 @@ Ao modificar assets precacheados em versões futuras, incremente `CACHE_VERSION`
 Não foram implementados leitura offline de capítulos, download offline, push notifications, Play Store/TWA, Capacitor, aplicativos nativos, alterações no banco ou alterações nos endpoints editoriais/autenticação.
 
 Melhorias futuras possíveis incluem offline controlado apenas para capítulos gratuitos, TWA para distribuição Android e notificações opt-in após definição de políticas editoriais.
+
+## Central privada do leitor e avatares oficiais
+
+A rota `/conta/` foi transformada em uma central pessoal do leitor. A edição ocorre em `/conta/configuracoes/`, sempre dependente de sessão ativa e do endpoint autenticado `GET/PATCH /api/profile/`.
+
+### Perfil e preferências
+
+- `display_name`, `bio`, `avatar_key`, até cinco gêneros favoritos e preferência de novidades são persistidos na tabela `users`.
+- Preferências de leitura são persistidas na conta e sincronizadas no navegador para aplicação imediata no leitor: tema, tamanho de fonte, espaçamento entre linhas e largura do conteúdo.
+- O leitor aplica essas preferências sem alterar obras, capítulos ou o fluxo editorial existente.
+- O card de biblioteca e a continuação de leitura usam somente `library_items` e `reading_progress` já existentes; sem histórico, a tela mostra estados vazios honestos.
+
+### Avatares
+
+O pacote recebido como `icons_profile.zip` foi tratado como o pacote de avatares solicitado. Os sete arquivos JPEG válidos foram convertidos para WebP 512 × 512, sem metadados incorporados, e adicionados em `public/assets/avatars/default/` com nomes estáveis de `avatar-01.webp` a `avatar-07.webp`. O backend aceita apenas chaves catalogadas em `functions/_lib/profile.ts`; caminhos arbitrários enviados pelo cliente são rejeitados por normalização para o fallback oficial.
+
+> Antes de disponibilizar esses avatares publicamente, confirme que a Ryuzen possui direitos/licenças de uso comercial das imagens fornecidas.
+
+### Migration desta rodada
+
+A migration incremental `migrations/0007_reader_profiles_and_preferences.sql` adiciona apenas campos opcionais ou com valores padrão seguros na tabela `users` e índices de consulta. Execute-a no D1 antes de publicar o código que usa `/api/profile/`:
+
+```bash
+npm run db:migrate:remote
+```

@@ -1,0 +1,21 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Configurações administrativas">
+<section data-admin-settings>
+  <div class="section-header"><div><span class="eyebrow">Sistema</span><h1>Configurações</h1><p class="lead">Preferências operacionais iniciais do painel e da vitrine editorial.</p></div></div>
+  <div class="notice hidden" data-settings-message></div>
+  <form class="surface admin-form-section settings-form" data-settings-form>
+    <div class="admin-form-grid">
+      <div class="field"><label for="platform_name">Nome público da plataforma</label><input id="platform_name" name="platform_name" required></div>
+      <div class="field"><label for="banner_duration_ms">Tempo padrão do carrossel (ms)</label><input id="banner_duration_ms" name="banner_duration_ms" type="number" min="3000" max="30000"></div>
+      <div class="field"><label for="max_active_banners">Máximo de banners ativos</label><input id="max_active_banners" name="max_active_banners" type="number" min="1" max="6"></div>
+      <label class="field"><span>Habilitar seção de destaques</span><input name="featured_enabled" type="checkbox"></label>
+    </div>
+    <div class="field"><label for="institutional_text">Texto institucional curto</label><textarea id="institutional_text" name="institutional_text" maxlength="240"></textarea></div>
+    <p class="hint">Essas preferências são armazenadas com segurança para uso gradual; mudanças públicas dependerão da integração da respectiva seção.</p>
+    <button class="btn primary" type="submit">Salvar configurações</button>
+  </form>
+</section>
+<script src="/assets/admin-operations.js" defer></script>
+</AdminLayout>

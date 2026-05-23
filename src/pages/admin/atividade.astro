@@ -1,0 +1,11 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Atividade recente">
+<section data-admin-activity>
+  <div class="section-header"><div><span class="eyebrow">Auditoria editorial</span><h1>Atividade recente</h1><p class="lead">Histórico simples de alterações relevantes feitas no painel.</p></div></div>
+  <div class="notice hidden" data-activity-message></div>
+  <div class="surface info-card activity-feed" data-activity-list><p class="muted">Carregando atividades...</p></div>
+</section>
+<script src="/assets/admin-operations.js" defer></script>
+</AdminLayout>

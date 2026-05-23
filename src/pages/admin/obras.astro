@@ -2,17 +2,17 @@
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
 <AdminLayout title="Gerenciar obras">
-  <section data-admin-works-list>
-    <div class="section-header">
-      <div><span class="eyebrow">Catálogo editorial</span><h1>Obras</h1><p class="muted">Gerencie apenas light novels e webnovels reais publicadas ou em rascunho.</p></div>
-      <a class="btn primary" href="/admin/obras/nova/">Nova obra</a>
-    </div>
-    <div class="notice hidden" data-works-message></div>
-    <div class="surface info-card admin-filters">
-      <div class="field"><label for="work-q">Busca</label><input id="work-q" data-work-filter="q" placeholder="Título, autor ou slug"></div>
-      <div class="field"><label for="work-status">Publicação</label><select id="work-status" data-work-filter="publication_status"><option value="">Todos</option><option value="draft">Rascunhos</option><option value="scheduled">Agendadas</option><option value="published">Publicadas</option><option value="hidden">Ocultas</option><option value="archived">Arquivadas</option></select></div>
-    </div>
-    <div class="table-wrap" style="margin-top: 1rem;"><table><thead><tr><th>Título</th><th>Autor</th><th>Tipo</th><th>Publicação</th><th>Mídia</th><th>Capítulos</th><th>Destaque</th><th>Atualização</th><th>Ações</th></tr></thead><tbody data-works-body><tr><td colspan="9">Carregando obras...</td></tr></tbody></table></div>
-  </section>
-  <script src="/assets/admin-editorial.js" defer></script>
+<section data-admin-works-list>
+  <div class="section-header"><div><span class="eyebrow">Catálogo editorial</span><h1>Obras</h1><p class="muted">Gerencie light novels e webnovels preservando obras publicadas e rascunhos.</p></div><a class="btn primary" href="/admin/obras/nova/">Nova obra</a></div>
+  <div class="notice hidden" data-works-message></div>
+  <div class="surface info-card admin-filters filter-grid">
+    <div class="field"><label for="work-q">Buscar por título ou autor</label><input id="work-q" data-work-filter="q" placeholder="Ex.: Meu Templo"></div>
+    <div class="field"><label for="work-editorial">Status editorial</label><select id="work-editorial" data-work-filter="status"><option value="">Todos</option><option value="development">Em desenvolvimento</option><option value="ongoing">Em andamento</option><option value="completed">Concluída</option><option value="paused">Em hiato</option></select></div>
+    <div class="field"><label for="work-type">Tipo</label><select id="work-type" data-work-filter="type"><option value="">Todos</option><option value="light_novel">Light novel</option><option value="webnovel">Webnovel</option></select></div>
+    <div class="field"><label for="work-status">Publicação</label><select id="work-status" data-work-filter="publication_status"><option value="">Todos</option><option value="draft">Rascunho</option><option value="scheduled">Agendada</option><option value="published">Publicada</option><option value="hidden">Oculta</option><option value="archived">Arquivada</option></select></div>
+    <div class="field"><label for="work-order">Ordenar</label><select id="work-order" data-work-filter="order"><option value="recent">Atualizadas recentemente</option><option value="oldest">Mais antigas</option><option value="alpha">A–Z</option></select></div>
+  </div>
+  <div class="admin-work-cards" data-works-body><div class="surface empty-state">Carregando obras...</div></div>
+</section>
+<script src="/assets/admin-editorial.v3.js" defer></script>
 </AdminLayout>

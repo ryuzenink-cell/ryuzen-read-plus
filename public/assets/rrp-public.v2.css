@@ -1668,3 +1668,10 @@ tbody tr:hover td {
 /* Hero discovery card: keep actions fully visible below any long carousel copy. */
 .home-discovery-bar { margin-top: 1.15rem; box-shadow: 0 13px 34px rgba(67, 42, 29, .07); }
 .carousel-content .actions { position: relative; z-index: 2; }
+
+/* Persistent reader visual preferences */
+html[data-reader-line-height='compact'] .reader-content { line-height: 1.62; }
+html[data-reader-line-height='normal'] .reader-content { line-height: 1.9; }
+html[data-reader-line-height='relaxed'] .reader-content { line-height: 2.16; }
+html[data-reader-content-width='comfortable'] .reader-shell { max-width: 820px; }
+html[data-reader-content-width='wide'] .reader-shell { max-width: 1020px; }

@@ -8,7 +8,7 @@
   };
   const renderUser = (root, user) => {
     const canEdit = ['admin', 'editor'].includes(user.role);
-    root.innerHTML = `<a class="btn header-btn ghost" href="/biblioteca/">Biblioteca</a>${canEdit ? '<a class="btn header-btn soft" href="/admin/">Admin</a>' : ''}<details class="account-menu"><summary class="btn header-btn account-summary" aria-label="Abrir menu da conta"><span class="account-avatar" aria-hidden="true">${initials(user.name)}</span><span class="account-name">${esc(user.name || 'Conta')}</span></summary><div class="account-dropdown" role="menu"><a href="/conta/" role="menuitem">Minha conta</a><a href="/biblioteca/" role="menuitem">Minha biblioteca</a>${canEdit ? '<a href="/admin/" role="menuitem">Painel editorial</a>' : ''}<button type="button" data-auth-logout role="menuitem">Sair</button></div></details>`;
+    root.innerHTML = `<a class="btn header-btn ghost" href="/biblioteca/">Biblioteca</a>${canEdit ? '<a class="btn header-btn soft" href="/admin/">Admin</a>' : ''}<details class="account-menu"><summary class="btn header-btn account-summary" aria-label="Abrir menu da conta"><span class="account-avatar" aria-hidden="true">${initials(user.name)}</span><span class="account-name">${esc(user.name || 'Conta')}</span></summary><div class="account-dropdown" role="menu"><a href="/conta/" role="menuitem">Minha conta</a><a href="/biblioteca/" role="menuitem">Minha biblioteca</a><a href="/conta/configuracoes/" role="menuitem">Configurações</a>${canEdit ? '<a href="/admin/" role="menuitem">Painel editorial</a>' : ''}<button type="button" data-auth-logout role="menuitem">Sair</button></div></details>`;
   };
   fetch('/api/auth/me', { credentials: 'include' })
     .then((response) => response.ok ? response.json() : null)

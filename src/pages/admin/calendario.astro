@@ -1,0 +1,30 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Calendário editorial">
+<section data-admin-calendar>
+  <div class="section-header"><div><span class="eyebrow">Planejamento</span><h1>Calendário editorial</h1><p class="lead">Planeje lançamentos, anúncios, campanhas e manutenções sem torná-los públicos automaticamente.</p></div></div>
+  <div class="notice hidden" data-calendar-message></div>
+  <div class="calendar-admin-grid">
+    <form class="surface admin-form-section" data-calendar-form>
+      <div class="form-section-heading"><h2 data-calendar-form-title>Novo evento</h2><button type="button" class="btn ghost hidden" data-calendar-cancel>Cancelar edição</button></div>
+      <div class="field"><label for="event_title">Título *</label><input id="event_title" name="title" required></div>
+      <div class="admin-form-grid">
+        <div class="field"><label for="event_type">Tipo</label><select id="event_type" name="event_type"><option value="new_chapter">Novo capítulo</option><option value="new_work">Nova obra</option><option value="announcement">Anúncio</option><option value="special_event">Evento especial</option><option value="campaign">Campanha</option><option value="maintenance">Manutenção</option></select></div>
+        <div class="field"><label for="event_status">Status</label><select id="event_status" name="status"><option value="planned">Planejado</option><option value="confirmed">Confirmado</option><option value="completed">Realizado</option><option value="cancelled">Cancelado</option></select></div>
+        <div class="field"><label for="event_work">Obra relacionada</label><select id="event_work" name="work_id"><option value="">Nenhuma</option></select></div>
+        <div class="field"><label for="event_chapter">Capítulo relacionado</label><select id="event_chapter" name="chapter_id"><option value="">Nenhum</option></select></div>
+        <div class="field"><label for="scheduled_at">Data e horário *</label><input id="scheduled_at" name="scheduled_at" type="datetime-local" required></div>
+      </div>
+      <div class="field"><label for="event_description">Descrição curta</label><textarea id="event_description" name="description" maxlength="400"></textarea></div>
+      <div class="admin-form-grid"><label class="field"><span>Exibir publicamente no futuro</span><input name="future_public" type="checkbox"></label><label class="field"><span>Destacar na home futuramente</span><input name="future_home_highlight" type="checkbox"></label></div>
+      <button class="btn primary" type="submit">Salvar evento</button>
+    </form>
+    <section>
+      <div class="surface info-card admin-filters"><div class="field"><label for="calendar-filter">Filtrar por tipo</label><select id="calendar-filter" data-calendar-filter><option value="">Todos os tipos</option><option value="new_chapter">Novo capítulo</option><option value="new_work">Nova obra</option><option value="announcement">Anúncio</option><option value="special_event">Evento especial</option><option value="campaign">Campanha</option><option value="maintenance">Manutenção</option></select></div></div>
+      <div class="calendar-timeline" data-calendar-list></div>
+    </section>
+  </div>
+</section>
+<script src="/assets/admin-operations.js" defer></script>
+</AdminLayout>

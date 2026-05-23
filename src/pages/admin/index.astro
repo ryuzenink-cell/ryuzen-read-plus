@@ -1,27 +1,30 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Painel editorial">
-  <div data-admin-overview>
+<AdminLayout title="Dashboard editorial">
+  <section data-admin-overview>
     <div class="section-header">
-      <div>
-        <span class="eyebrow">Gestão editorial</span>
-        <h1>Painel editorial</h1>
-        <p class="lead">Publique e organize light novels e webnovels reais. O site público usa apenas o conteúdo publicado por aqui.</p>
-      </div>
-      <div class="actions"><a class="btn primary" href="/admin/obras/nova/">Nova obra</a><a class="btn soft" href="/admin/capitulos/">Novo capítulo</a><a class="btn ghost" href="/admin/banners/">Banners da home</a></div>
+      <div><span class="eyebrow">Gestão editorial</span><h1>Dashboard</h1><p class="lead">Acompanhe catálogo, publicações, vitrine e planejamento em um único lugar.</p></div>
+      <div class="actions"><a class="btn primary" href="/admin/obras/nova/">Nova obra</a><a class="btn soft" href="/admin/capitulos/#novo">Novo capítulo</a><a class="btn ghost" href="/admin/calendario/">Agendar evento</a></div>
     </div>
     <div class="notice hidden" data-admin-overview-message></div>
-    <div class="stat-grid">
+    <div class="stat-grid admin-stat-expanded">
       <div class="surface stat-card"><strong data-stat-works>—</strong><span>obras cadastradas</span></div>
       <div class="surface stat-card"><strong data-stat-published>—</strong><span>obras publicadas</span></div>
       <div class="surface stat-card"><strong data-stat-drafts>—</strong><span>rascunhos</span></div>
       <div class="surface stat-card"><strong data-stat-chapters>—</strong><span>capítulos publicados</span></div>
+      <div class="surface stat-card"><strong data-stat-scheduled>—</strong><span>capítulos agendados</span></div>
+      <div class="surface stat-card"><strong data-stat-banners>—</strong><span>banners ativos</span></div>
+      <div class="surface stat-card"><strong data-stat-events>—</strong><span>eventos futuros</span></div>
+      <div class="surface stat-card warning-stat"><strong data-stat-uncovered>—</strong><span>obras sem capítulos</span></div>
     </div>
-    <div class="two-column" style="margin-top: 1rem;">
+    <div class="dashboard-grid" style="margin-top:1rem;">
+      <section class="surface info-card dashboard-wide"><div class="panel-title"><h2>Pendências editoriais</h2><a href="/admin/obras/" class="text-link">Ver obras</a></div><div class="admin-task-list" data-pendencies></div></section>
+      <section class="surface info-card"><div class="panel-title"><h2>Próximos eventos</h2><a href="/admin/calendario/" class="text-link">Calendário</a></div><div class="chapter-list" data-upcoming-events></div></section>
+      <section class="surface info-card"><div class="panel-title"><h2>Atividade recente</h2><a href="/admin/atividade/" class="text-link">Histórico</a></div><div class="chapter-list" data-overview-activity></div></section>
       <section class="surface info-card"><h2>Últimas obras atualizadas</h2><div class="chapter-list" data-recent-works></div></section>
       <section class="surface info-card"><h2>Últimos capítulos</h2><div class="chapter-list" data-recent-chapters></div></section>
     </div>
-  </div>
-  <script src="/assets/admin-editorial.js" defer></script>
+  </section>
+  <script src="/assets/admin-editorial.v3.js" defer></script>
 </AdminLayout>

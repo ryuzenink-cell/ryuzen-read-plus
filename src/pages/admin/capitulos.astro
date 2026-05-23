@@ -2,44 +2,42 @@
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
 <AdminLayout title="Capítulos">
-  <section data-admin-chapters>
-    <div class="section-header">
-      <div><span class="eyebrow">Publicação de capítulos</span><h1>Capítulos</h1><p class="muted">Crie e edite capítulos em Markdown, vinculados a obras reais.</p></div>
-      <button class="btn soft" type="button" data-new-chapter>Novo capítulo</button>
+<section data-admin-chapters>
+  <div class="section-header"><div><span class="eyebrow">Publicação contínua</span><h1>Capítulos</h1><p class="muted">Crie, agende e pré-visualize capítulos em Markdown por volume e ordem.</p></div><button class="btn primary" type="button" data-new-chapter>Novo capítulo</button></div>
+  <div class="notice hidden" data-chapter-message></div>
+  <div class="surface info-card admin-filters filter-grid">
+    <div class="field"><label for="chapter-q">Busca</label><input id="chapter-q" data-chapter-filter="q" placeholder="Título ou obra"></div>
+    <div class="field"><label for="chapter-work-filter">Obra</label><select id="chapter-work-filter" data-chapter-filter="work_id"><option value="">Todas as obras</option></select></div>
+    <div class="field"><label for="chapter-status-filter">Status</label><select id="chapter-status-filter" data-chapter-filter="publication_status"><option value="">Todos</option><option value="draft">Rascunho</option><option value="scheduled">Agendado</option><option value="published">Publicado</option><option value="hidden">Oculto</option></select></div>
+  </div>
+  <form id="novo" class="surface admin-form-section" data-chapter-form>
+    <div class="form-section-heading"><div><h2 data-chapter-form-title>Novo capítulo</h2><p class="hint">Conteúdo em Markdown com preview antes da publicação.</p></div><button class="btn ghost" type="button" data-reader-preview>Pré-visualizar leitura</button></div>
+    <div class="admin-form-grid">
+      <div class="field"><label for="work_id">Obra vinculada *</label><select id="work_id" name="work_id" required><option value="">Carregando obras...</option></select></div>
+      <div class="field"><label for="volume_number">Volume</label><input id="volume_number" name="volume_number" type="number" min="1" value="1"></div>
+      <div class="field"><label for="chapter_type">Tipo</label><select id="chapter_type" name="chapter_type"><option value="prologue">Prólogo</option><option value="chapter" selected>Capítulo</option><option value="interlude">Interlúdio</option><option value="epilogue">Epílogo</option><option value="extra">Extra</option></select></div>
+      <div class="field"><label for="number">Número</label><input id="number" name="number" type="number" step="0.01" value="1"></div>
+      <div class="field"><label for="order_index">Ordem</label><input id="order_index" name="order_index" type="number" value="1"><small>Controle seguro de ordenação, sem arrastar itens.</small></div>
+      <div class="field"><label for="title">Título *</label><input id="title" name="title" required></div>
+      <div class="field"><label for="slug">Slug *</label><input id="slug" name="slug" required></div>
+      <div class="field"><label for="publication_status">Status</label><select id="publication_status" name="publication_status"><option value="draft">Rascunho</option><option value="scheduled">Agendado</option><option value="published">Publicado</option><option value="hidden">Oculto</option><option value="archived">Arquivado</option></select></div>
+      <div class="field"><label for="scheduled_at">Publicar em</label><input id="scheduled_at" name="scheduled_at" type="datetime-local"></div>
+      <label class="field"><span>Capítulo gratuito</span><input name="is_free" type="checkbox" checked></label>
     </div>
-    <div class="notice hidden" data-chapter-message></div>
-    <form class="surface admin-form-section" data-chapter-form>
-      <h2 data-chapter-form-title>Novo capítulo</h2><p class="hint">Use Markdown simples. Imagens externas podem ser inseridas com <code>![texto alternativo](https://url-da-imagem)</code>.</p>
-      <div class="admin-form-grid">
-        <div class="field"><label for="work_id">Obra *</label><select id="work_id" name="work_id" required><option value="">Carregando obras...</option></select></div>
-        <div class="field"><label for="number">Número</label><input id="number" name="number" type="number" step="0.01" value="1"></div>
-        <div class="field"><label for="title">Título *</label><input id="title" name="title" required></div>
-        <div class="field"><label for="slug">Slug *</label><input id="slug" name="slug" required></div>
-        <div class="field"><label for="publication_status">Publicação</label><select id="publication_status" name="publication_status"><option value="draft">Rascunho</option><option value="scheduled">Agendado</option><option value="published">Publicado</option><option value="hidden">Oculto</option><option value="archived">Arquivado</option></select></div>
-        <div class="field"><label for="content_format">Formato</label><select id="content_format" name="content_format"><option value="markdown">Markdown</option><option value="plain">Texto puro</option></select></div>
-        <label class="field"><span>Capítulo gratuito</span><input name="is_free" type="checkbox" checked></label>
-        <div class="field"><label for="published_at">Publicado em</label><input id="published_at" name="published_at" type="datetime-local"></div>
-        <div class="field"><label for="scheduled_at">Agendado para</label><input id="scheduled_at" name="scheduled_at" type="datetime-local"></div>
-      </div>
-      <div class="field"><label for="excerpt">Resumo</label><textarea id="excerpt" name="excerpt" maxlength="500"></textarea></div>
-      <div class="admin-form-grid">
-        <div class="field"><label for="content">Conteúdo do capítulo *</label><textarea id="content" name="content" class="editor-textarea" placeholder="Escreva o capítulo aqui..." required></textarea></div>
-        <div class="field"><label>Preview básico</label><div class="surface info-card markdown-preview" data-chapter-preview><p class="muted">Preview vazio.</p></div></div>
-      </div>
-      <div class="admin-form-grid">
-        <div class="field"><label for="seo_title">SEO title</label><input id="seo_title" name="seo_title" maxlength="70"></div>
-        <div class="field"><label for="seo_description">SEO description</label><textarea id="seo_description" name="seo_description" maxlength="170"></textarea></div>
-      </div>
-      <div class="admin-form-actions">
-        <button class="btn soft" type="submit" data-publication-status="draft">Salvar rascunho</button>
-        <button class="btn primary" type="submit" data-publication-status="published">Publicar capítulo</button>
-      </div>
-    </form>
-
-    <section style="margin-top:1rem;">
-      <h2>Capítulos cadastrados</h2>
-      <div class="table-wrap"><table><thead><tr><th>Nº</th><th>Título</th><th>Obra</th><th>Status</th><th>Grátis</th><th>Atualização</th><th>Ações</th></tr></thead><tbody data-chapters-body><tr><td colspan="7">Carregando capítulos...</td></tr></tbody></table></div>
-    </section>
-  </section>
-  <script src="/assets/admin-editorial.js" defer></script>
+    <div class="field"><label for="excerpt">Resumo do capítulo</label><textarea id="excerpt" name="excerpt" maxlength="500"></textarea></div>
+    <div class="editor-layout">
+      <div class="field"><label for="content">Conteúdo Markdown *</label><textarea id="content" name="content" class="editor-textarea" placeholder="Escreva ou cole o capítulo aqui..." required></textarea><div class="field-meta"><span data-word-count>0 palavras</span><span data-reading-time>0 min de leitura</span></div><input type="file" accept=".md,text/markdown" data-md-upload aria-label="Importar arquivo Markdown"></div>
+      <div class="field"><label>Preview renderizado</label><div class="surface info-card markdown-preview" data-chapter-preview><p class="muted">Preview vazio.</p></div></div>
+    </div>
+    <input type="hidden" name="content_format" value="markdown">
+    <div class="admin-form-grid">
+      <div class="field"><label for="seo_title">Título SEO</label><input id="seo_title" name="seo_title" maxlength="70"></div>
+      <div class="field"><label for="seo_description">Descrição SEO</label><textarea id="seo_description" name="seo_description" maxlength="170"></textarea></div>
+    </div>
+    <div class="admin-form-actions"><button class="btn soft" type="submit" data-publication-status="draft">Salvar rascunho</button><button class="btn ghost" type="submit" data-publication-status="scheduled">Salvar agendamento</button><button class="btn primary" type="submit" data-publication-status="published">Publicar</button></div>
+  </form>
+  <section class="admin-list-section"><h2>Capítulos cadastrados</h2><div class="table-wrap"><table><thead><tr><th>Volume/ordem</th><th>Tipo e título</th><th>Obra</th><th>Status</th><th>Publicação</th><th>Atualização</th><th>Ações</th></tr></thead><tbody data-chapters-body><tr><td colspan="7">Carregando capítulos...</td></tr></tbody></table></div></section>
+  <dialog class="admin-preview-dialog reading-dialog" data-reader-preview-dialog><div class="dialog-header"><h2>Pré-visualização de leitura</h2><button class="btn ghost" type="button" data-close-reader-preview>Fechar</button></div><article class="reader-preview" data-reader-preview-render></article></dialog>
+</section>
+<script src="/assets/admin-editorial.v3.js" defer></script>
 </AdminLayout>

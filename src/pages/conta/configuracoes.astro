@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Configurações da conta" description="Personalize seu perfil e suas preferências de leitura na Ryuzen Read Plus.">
+  <section class="page-section account-hub-section">
+    <div class="container account-settings-container">
+      <div class="reader-account" data-reader-account-settings>
+        <div class="surface account-loading" aria-live="polite">
+          <span class="eyebrow">Perfil</span>
+          <h1>Configurações da conta</h1>
+          <p class="lead">Carregando suas preferências...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="/assets/account-profile.js" defer></script>
+</BaseLayout>

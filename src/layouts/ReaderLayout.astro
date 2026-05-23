@@ -27,10 +27,12 @@ const fullTitle = `${title} | ${SITE.name}`;
     <meta name="twitter:card" content="summary" />
     <script is:inline>
       (() => {
-        const saved = localStorage.getItem('rrp-theme');
+        const saved = localStorage.getItem('rrp-reader-theme') || 'dark';
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = saved || (prefersDark ? 'dark' : 'light');
-        document.documentElement.dataset.theme = theme;
+        const theme = saved === 'system' ? (prefersDark ? 'dark' : 'light') : saved;
+        document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+        document.documentElement.dataset.readerLineHeight = localStorage.getItem('rrp-reader-line-height') || 'normal';
+        document.documentElement.dataset.readerContentWidth = localStorage.getItem('rrp-reader-content-width') || 'comfortable';
         document.querySelector('[data-theme-color]')?.setAttribute('content', theme === 'dark' ? '#181411' : '#8f4f36');
         const size = localStorage.getItem('rrp-reader-font-size');
         if (size) document.documentElement.style.setProperty('--reader-font-size', `${size}px`);
@@ -62,7 +64,7 @@ const fullTitle = `${title} | ${SITE.name}`;
           const html = document.documentElement;
           const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
           html.dataset.theme = next;
-          localStorage.setItem('rrp-theme', next);
+          localStorage.setItem('rrp-reader-theme', next);
           document.querySelector('[data-theme-color]')?.setAttribute('content', next === 'dark' ? '#181411' : '#8f4f36');
         });
       });

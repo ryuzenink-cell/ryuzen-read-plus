@@ -2,60 +2,40 @@
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 ---
 <AdminLayout title="Banners da home">
-  <section data-admin-banners>
-    <div class="section-header">
-      <div>
-        <span class="eyebrow">Vitrine pública</span>
-        <h1>Carrossel da página inicial</h1>
-        <p class="lead">Escolha de 1 a 6 banners ativos para apresentar suas novels aos leitores. Reaproveite banners das obras publicadas ou use URLs externas.</p>
+<section data-admin-banners>
+  <div class="section-header"><div><span class="eyebrow">Vitrine pública</span><h1>Banners da home</h1><p class="lead">Configure a chamada curta, a arte desktop/mobile e o período de cada banner sem depender da sinopse completa da obra.</p></div><a class="btn soft" href="/" target="_blank" rel="noopener">Visualizar home</a></div>
+  <div class="notice hidden" data-banner-message></div>
+  <div class="stat-grid"><div class="surface stat-card"><strong data-banner-active-count>—</strong><span>banners ativos</span></div><div class="surface stat-card"><strong>6</strong><span>limite atual</span></div><div class="surface stat-card"><strong data-banner-work-count>—</strong><span>obras elegíveis</span></div></div>
+  <div class="admin-banner-grid">
+    <form class="surface admin-form-section" data-banner-form>
+      <div class="form-section-heading"><div><h2 data-banner-form-title>Novo banner</h2><p class="hint">Recomendação: texto promocional de até 160 caracteres.</p></div><button type="button" class="btn ghost hidden" data-banner-cancel>Cancelar edição</button></div>
+      <fieldset class="banner-toggle-group"><legend>Origem da arte</legend><label><input type="radio" name="source_type" value="work" checked> <span>Usar arte de uma obra publicada</span></label><label><input type="radio" name="source_type" value="external"> <span>Inserir arte por URL externa</span></label></fieldset>
+      <div class="field" data-work-source-fields><label for="banner_work_id">Obra relacionada</label><select id="banner_work_id" name="work_id"><option value="">Carregando obras...</option></select></div>
+      <div data-external-source-fields class="hidden"><div class="field"><label for="image_url">Imagem desktop *</label><input id="image_url" name="image_url" type="url" placeholder="https://..."></div></div>
+      <div class="field"><label for="mobile_image_url">Imagem mobile</label><input id="mobile_image_url" name="mobile_image_url" type="url" placeholder="https://..."><small>Obrigatório visualmente recomendado para banners ativos.</small></div>
+      <div class="admin-form-grid">
+        <div class="field"><label for="eyebrow">Selo editorial</label><input id="eyebrow" name="eyebrow" placeholder="Novo capítulo"></div>
+        <div class="field"><label for="banner_title">Título promocional *</label><input id="banner_title" name="title" required></div>
       </div>
-      <a class="btn soft" href="/" target="_blank" rel="noopener">Visualizar home</a>
-    </div>
-    <div class="notice hidden" data-banner-message></div>
-    <div class="stat-grid banner-stat-grid">
-      <div class="surface stat-card"><strong data-banner-active-count>—</strong><span>banners ativos</span></div>
-      <div class="surface stat-card"><strong>6</strong><span>limite do carrossel</span></div>
-      <div class="surface stat-card"><strong data-banner-work-count>—</strong><span>obras com banner</span></div>
-    </div>
-    <div class="admin-banner-grid">
-      <form class="surface admin-form-section" data-banner-form>
-        <div class="form-section-heading"><div><h2 data-banner-form-title>Novo banner</h2><p class="hint">Os banners são exibidos em carrossel na primeira dobra da home.</p></div><button type="button" class="btn ghost hidden" data-banner-cancel>Cancelar edição</button></div>
-        <fieldset class="banner-toggle-group">
-          <legend>Origem do banner</legend>
-          <label><input type="radio" name="source_type" value="work" checked> <span>Reaproveitar banner de uma obra publicada</span></label>
-          <label><input type="radio" name="source_type" value="external"> <span>Inserir imagem por URL externa</span></label>
-        </fieldset>
-        <div class="field" data-work-source-fields>
-          <label for="banner_work_id">Obra publicada com banner</label>
-          <select id="banner_work_id" name="work_id"><option value="">Carregando obras...</option></select>
-          <small>A URL cadastrada na própria obra será usada no carrossel.</small>
-        </div>
-        <div data-external-source-fields class="hidden">
-          <div class="field"><label for="image_url">URL da imagem horizontal *</label><input id="image_url" name="image_url" type="url" placeholder="https://..."><small>Recomendado: proporção próxima de 16:7, sem upload local.</small></div>
-          <div class="field"><label for="mobile_image_url">URL alternativa para celular</label><input id="mobile_image_url" name="mobile_image_url" type="url" placeholder="https://..."></div>
-        </div>
-        <div class="banner-form-preview surface" data-banner-preview><p class="muted">Selecione uma obra ou informe uma URL para visualizar o banner.</p></div>
-        <div class="admin-form-grid">
-          <div class="field"><label for="eyebrow">Selo editorial</label><input id="eyebrow" name="eyebrow" placeholder="Novo capítulo disponível"></div>
-          <div class="field"><label for="banner_title">Título exibido *</label><input id="banner_title" name="title" required placeholder="Sua próxima aventura começa aqui"></div>
-          <div class="field"><label for="banner_description">Texto curto</label><textarea id="banner_description" name="description" maxlength="360" placeholder="Convide o leitor a começar a obra."></textarea></div>
-          <div class="field"><label for="alt_text">Texto alternativo da imagem</label><input id="alt_text" name="alt_text" placeholder="Banner promocional da obra..."></div>
-          <div class="field"><label for="cta_label">Texto do botão</label><input id="cta_label" name="cta_label" value="Começar leitura"></div>
-          <div class="field"><label for="cta_url">Link do botão</label><input id="cta_url" name="cta_url" placeholder="/obra/slug/ ou https://..."></div>
-          <div class="field"><label for="priority">Prioridade</label><input id="priority" name="priority" type="number" value="0"><small>Valores maiores aparecem primeiro.</small></div>
-          <label class="field"><span>Ativo no carrossel</span><input name="active" type="checkbox" checked></label>
-          <div class="field"><label for="starts_at">Exibir a partir de</label><input id="starts_at" name="starts_at" type="datetime-local"></div>
-          <div class="field"><label for="ends_at">Exibir até</label><input id="ends_at" name="ends_at" type="datetime-local"></div>
-        </div>
-        <div class="admin-form-actions">
-          <button class="btn primary" type="submit">Salvar banner</button>
-        </div>
-      </form>
-      <section>
-        <div class="section-header compact-section-header"><div><h2>Banners configurados</h2><p class="muted">Mantenha entre 1 e 6 ativos para o carrossel.</p></div></div>
-        <div class="banner-admin-list" data-banner-list><div class="surface empty-state"><p class="muted">Carregando banners...</p></div></div>
-      </section>
-    </div>
-  </section>
-  <script src="/assets/admin-banners.v2.js" defer></script>
+      <div class="field"><label for="banner_description">Texto promocional próprio do banner</label><textarea id="banner_description" name="description" maxlength="360" data-banner-copy></textarea><div class="field-meta"><small>Não use a sinopse completa.</small><small data-banner-copy-count>0 / 160 recomendados</small></div></div>
+      <div class="admin-form-grid">
+        <div class="field"><label for="cta_label">Botão principal</label><input id="cta_label" name="cta_label" value="Começar leitura"></div>
+        <div class="field"><label for="cta_url">Link principal</label><input id="cta_url" name="cta_url" placeholder="/obra/slug/"></div>
+        <div class="field"><label for="secondary_cta_label">Botão secundário</label><input id="secondary_cta_label" name="secondary_cta_label" placeholder="Saiba mais"></div>
+        <div class="field"><label for="secondary_cta_url">Link secundário</label><input id="secondary_cta_url" name="secondary_cta_url" placeholder="/explorar/"></div>
+        <div class="field"><label for="priority">Ordem de exibição</label><input id="priority" name="priority" type="number" value="0"></div>
+        <div class="field"><label for="duration_ms">Permanência (ms)</label><input id="duration_ms" name="duration_ms" type="number" min="3000" max="30000" placeholder="7000"></div>
+        <label class="field"><span>Banner ativo</span><input name="active" type="checkbox" checked></label>
+        <div class="field"><label for="starts_at">Início</label><input id="starts_at" name="starts_at" type="datetime-local"></div>
+        <div class="field"><label for="ends_at">Fim</label><input id="ends_at" name="ends_at" type="datetime-local"></div>
+        <div class="field"><label for="alt_text">Descrição da imagem</label><input id="alt_text" name="alt_text"></div>
+      </div>
+      <h3>Pré-visualização</h3>
+      <div class="banner-device-preview"><div><span class="preview-label">Desktop</span><div class="banner-stage desktop" data-banner-preview-desktop></div></div><div><span class="preview-label">Mobile</span><div class="banner-stage mobile" data-banner-preview-mobile></div></div></div>
+      <div class="admin-form-actions"><button class="btn primary" type="submit">Salvar banner</button></div>
+    </form>
+    <section><h2>Banners configurados</h2><div class="banner-admin-list" data-banner-list><div class="surface empty-state">Carregando banners...</div></div></section>
+  </div>
+</section>
+<script src="/assets/admin-banners.v3.js" defer></script>
 </AdminLayout>

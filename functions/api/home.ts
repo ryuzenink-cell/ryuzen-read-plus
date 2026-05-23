@@ -41,7 +41,7 @@ async function homeCarousel(db: any) {
         END AS alt_text,
         home_banners.eyebrow, home_banners.title, home_banners.description,
         home_banners.cta_label, home_banners.cta_url, home_banners.priority,
-        home_banners.active, home_banners.starts_at, home_banners.ends_at,
+        home_banners.active, home_banners.starts_at, home_banners.ends_at, home_banners.duration_ms,
         works.slug AS work_slug, works.title AS work_title, works.cover_url AS work_cover_url
       FROM home_banners
       LEFT JOIN works ON works.id = home_banners.work_id
@@ -75,7 +75,7 @@ async function homeCarousel(db: any) {
       COALESCE(featured_label, 'Destaque da Ryuzen') AS eyebrow, title,
       COALESCE(short_description, description) AS description, 'Começar leitura' AS cta_label,
       '/obra/' || slug || '/' AS cta_url, featured_priority AS priority, slug AS work_slug,
-      cover_url AS work_cover_url,
+      cover_url AS work_cover_url, NULL AS duration_ms,
       CASE WHEN banner_url IS NULL OR banner_url = '' THEN 1 ELSE 0 END AS uses_cover_only
     FROM works
     WHERE ${publicWhere('works')}

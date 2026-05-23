@@ -60,23 +60,26 @@ async function homeCarousel(db: any) {
       LIMIT 6
     `).all();
 
-    // Se o administrador configurou o carrossel, respeitamos sua seleção e agenda.
-    // Caso haja banners elegíveis, eles são apresentados imediatamente.
+    // Se houver banners ativos e dentro do período configurado, eles têm prioridade.
     if (results.length) return results;
-    const configured = await db.prepare('SELECT COUNT(*) AS total FROM home_banners').first();
-    if (Number((configured as any)?.total || 0) > 0) return [];
+    // Caso a configuração esteja vazia, inativa ou fora do período, a Home não fica quebrada:
+    // ela reaproveita automaticamente a mídia das obras públicas abaixo.
   } catch {
     // Compatibilidade: enquanto a tabela de carrossel ainda não existir, usa banners das obras.
   }
 
   const { results = [] } = await db.prepare(`
-    SELECT id, id AS work_id, 'work' AS source_type, banner_url AS image_url, banner_alt AS alt_text,
+    SELECT id, id AS work_id, 'work' AS source_type,
+      COALESCE(NULLIF(banner_url, ''), cover_url) AS image_url,
+      COALESCE(NULLIF(banner_alt, ''), cover_alt, 'Imagem de destaque de ' || title) AS alt_text,
       COALESCE(featured_label, 'Destaque da Ryuzen') AS eyebrow, title,
       COALESCE(short_description, description) AS description, 'Começar leitura' AS cta_label,
       '/obra/' || slug || '/' AS cta_url, featured_priority AS priority, slug AS work_slug,
-      cover_url AS work_cover_url
+      cover_url AS work_cover_url,
+      CASE WHEN banner_url IS NULL OR banner_url = '' THEN 1 ELSE 0 END AS uses_cover_only
     FROM works
-    WHERE ${publicWhere('works')} AND banner_url IS NOT NULL AND banner_url <> ''
+    WHERE ${publicWhere('works')}
+      AND ((banner_url IS NOT NULL AND banner_url <> '') OR (cover_url IS NOT NULL AND cover_url <> ''))
     ORDER BY is_featured DESC, featured_priority DESC, updated_at DESC
     LIMIT 6
   `).all();
@@ -134,8 +137,8 @@ export async function onRequestGet({ env }: any) {
       ranking: await decorate(db, editorialRows),
       recentChapters: chaptersRows,
       genres: genresRows
-    });
+    }, { headers: { 'cache-control': 'no-store, max-age=0' } });
   } catch (error) {
-    return json({ ok: false, message: error instanceof Error ? error.message : 'Erro ao carregar a página inicial.' }, { status: 500 });
+    return json({ ok: false, message: error instanceof Error ? error.message : 'Erro ao carregar a página inicial.' }, { status: 500, headers: { 'cache-control': 'no-store, max-age=0' } });
   }
 }
